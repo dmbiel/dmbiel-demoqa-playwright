@@ -46,7 +46,9 @@ export class PracticeFormPage {
     }
 
     for (const hobby of form.hobbies) {
-      await this.page.locator(`label[for="${hobbyInputIds[hobby]}"]`).click();
+      await this.page.locator(`label[for="${hobbyInputIds[hobby]}"]`).click({
+        force: true,
+      });
     }
 
     await this.page.locator('#currentAddress').fill(form.currentAddress);

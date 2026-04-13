@@ -1,5 +1,16 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const sharedUse = {
+  baseURL: 'https://demoqa.com',
+  headless: true,
+  viewport: { width: 1440, height: 900 },
+  actionTimeout: 15_000,
+  navigationTimeout: 30_000,
+  screenshot: 'only-on-failure' as const,
+  trace: 'retain-on-failure' as const,
+  video: 'retain-on-failure' as const,
+};
+
 export default defineConfig({
   testDir: './tests',
   testMatch: '**/*.spec.ts',
@@ -12,20 +23,24 @@ export default defineConfig({
     timeout: 10_000,
   },
   outputDir: 'test-results',
-  use: {
-    baseURL: 'https://demoqa.com',
-    headless: true,
-    viewport: { width: 1440, height: 900 },
-    actionTimeout: 15_000,
-    navigationTimeout: 30_000,
-    screenshot: 'only-on-failure',
-    trace: 'retain-on-failure',
-    video: 'retain-on-failure',
-  },
+  use: sharedUse,
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'healthcheck',
+      testMatch: /healthcheck\.spec\.ts/,
+      use: { ...devices['Desktop Chrome'], ...sharedUse },
+    },
+    {
+      name: 'smoke',
+      testMatch: /tests[\\/]+smoke[\\/].*\.spec\.ts/,
+      dependencies: ['healthcheck'],
+      use: { ...devices['Desktop Chrome'], ...sharedUse },
+    },
+    {
+      name: 'regression',
+      testMatch: /tests[\\/]+regression[\\/].*\.spec\.ts/,
+      dependencies: ['healthcheck'],
+      use: { ...devices['Desktop Chrome'], ...sharedUse },
     },
   ],
 });

@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 
-import { DroppablePage } from '../src/pages/droppable.page';
+import { DroppablePage } from '../../../src/pages/droppable.page';
 
 test.describe('Drag and Drop', () => {
   test('moves the draggable element into the drop zone', async ({ page }) => {

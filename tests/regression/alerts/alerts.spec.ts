@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { AlertsPage } from '../src/pages/alerts.page';
+import { AlertsPage } from '../../../src/pages/alerts.page';
 
 test.describe('Alerts', () => {
   test('accepts a standard browser alert', async ({ page }) => {

@@ -21,7 +21,10 @@ test.describe('Web Tables', () => {
 
     await webTablesPage.goto();
     await webTablesPage.createRecord(webTableRecord);
-    await webTablesPage.updateRecord(webTableRecord.email, updatedWebTableRecord);
+    await webTablesPage.updateRecord(
+      webTableRecord.email,
+      updatedWebTableRecord,
+    );
     await webTablesPage.search(updatedWebTableRecord.email);
     await webTablesPage.expectRowToContain(updatedWebTableRecord);
 

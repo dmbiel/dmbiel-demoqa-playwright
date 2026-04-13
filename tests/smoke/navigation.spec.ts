@@ -12,7 +12,9 @@ test.describe('Smoke navigation', () => {
     await expect(
       page.getByText('Please select an item from left to start practice.'),
     ).toBeVisible();
-    await expect(page.getByText('Practice Form', { exact: true })).toBeVisible();
+    await expect(
+      page.getByText('Practice Form', { exact: true }),
+    ).toBeVisible();
   });
 
   test('homepage card opens the Alerts section', async ({ page }) => {

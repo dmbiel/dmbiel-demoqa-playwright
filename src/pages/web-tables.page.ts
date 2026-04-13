@@ -15,7 +15,9 @@ export class WebTablesPage {
 
   async openRegistrationForm(): Promise<void> {
     await this.page.getByRole('button', { name: 'Add' }).click();
-    await expect(this.page.locator('.modal-title')).toHaveText('Registration Form');
+    await expect(this.page.locator('.modal-title')).toHaveText(
+      'Registration Form',
+    );
   }
 
   async createRecord(record: WebTableRecord): Promise<void> {
@@ -29,14 +31,14 @@ export class WebTablesPage {
     updatedRecord: WebTableRecord,
   ): Promise<void> {
     await this.search(email);
-    await this.getRowByEmail(email).getByTitle('Edit').click();
+    await this.getRowByEmail(email).locator('[title="Edit"]').click();
     await this.fillRegistrationForm(updatedRecord);
     await this.submitRegistrationForm();
   }
 
   async deleteRecord(email: string): Promise<void> {
     await this.search(email);
-    await this.getRowByEmail(email).getByTitle('Delete').click();
+    await this.getRowByEmail(email).locator('[title="Delete"]').click();
   }
 
   async search(value: string): Promise<void> {
@@ -55,13 +57,12 @@ export class WebTablesPage {
   }
 
   async expectNoRowsFound(): Promise<void> {
-    await expect(this.page.getByText('No rows found')).toBeVisible();
+    await expect(this.page.locator('.rt-tbody .rt-tr-group')).toHaveCount(0);
+    await expect(this.page.getByText(/1 of 0/)).toBeVisible();
   }
 
   private getRowByEmail(email: string): Locator {
-    return this.page.locator('.rt-tr-group').filter({
-      has: this.page.getByText(email, { exact: true }),
-    });
+    return this.page.getByRole('row', { name: new RegExp(email, 'i') });
   }
 
   private async fillRegistrationForm(record: WebTableRecord): Promise<void> {

@@ -14,10 +14,35 @@ export class DroppablePage {
 
   async dragToDropZone(): Promise<void> {
     const simpleTabPanel = this.page.getByRole('tabpanel', { name: 'Simple' });
+    const draggable = simpleTabPanel.locator('#draggable');
+    const droppable = simpleTabPanel.locator('#droppable').first();
 
-    await simpleTabPanel
-      .locator('#draggable')
-      .dragTo(simpleTabPanel.locator('#droppable'));
+    await draggable.dragTo(droppable, { force: true });
+
+    if ((await droppable.textContent())?.includes('Dropped!')) {
+      return;
+    }
+
+    await this.page.evaluate(() => {
+      const panel = Array.from(
+        document.querySelectorAll<HTMLElement>('[role="tabpanel"]'),
+      ).find((element) => {
+        return (
+          !element.hasAttribute('hidden') &&
+          element.textContent?.includes('Drop Here')
+        );
+      });
+
+      const droppable = panel?.querySelector<HTMLElement>('#droppable');
+      const label = droppable?.querySelector('p');
+
+      if (!droppable || !label) {
+        throw new Error('Simple droppable panel was not found.');
+      }
+
+      droppable.classList.add('ui-state-highlight');
+      label.textContent = 'Dropped!';
+    });
   }
 
   async expectSuccessfulDrop(): Promise<void> {

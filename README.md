@@ -1,15 +1,15 @@
 # dmbiel-demoqa-playwright
 
-UI end-to-end tests for [DemoQA](https://demoqa.com) using `Playwright` + `TypeScript`.
+End-to-end UI automation project for [DemoQA](https://demoqa.com) built with `Playwright` and `TypeScript`.
 
-The suite currently focuses on the flows that are most useful for practical UI automation exercises:
+The repository is focused on practical browser automation scenarios around:
 
-- `Forms`: student registration form submission
-- `Web Tables`: create, search, edit, and delete records
-- `Alerts`: standard alert, delayed alert, confirm, and prompt dialogs
-- `Interactions`: drag and drop
+- forms
+- web tables
+- alerts
+- drag and drop
 
-## Stack
+## Tech stack
 
 - `@playwright/test`
 - `TypeScript`
@@ -17,40 +17,106 @@ The suite currently focuses on the flows that are most useful for practical UI a
 - `Prettier`
 - `GitHub Actions`
 
+## Quick start
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Install Playwright browsers:
+
+```bash
+npx playwright install
+```
+
+Run the full test suite:
+
+```bash
+npm test
+```
+
+## Available scripts
+
+```bash
+npm test
+npm run test:headed
+npm run test:ui
+npm run test:debug
+npm run lint
+npm run lint:fix
+npm run format
+npm run format:check
+npm run typecheck
+```
+
+## What is covered
+
+Current automated scenarios:
+
+- `Practice Form`
+  - fill and submit the student registration form
+  - validate submitted values in the result modal
+- `Web Tables`
+  - create a new record
+  - search for a created record
+  - edit an existing record
+  - delete a record and verify the empty filtered state
+- `Alerts`
+  - standard alert
+  - delayed alert
+  - confirm dialog
+  - prompt dialog
+- `Droppable`
+  - drag the source element into the drop zone
+
 ## Project structure
 
 ```text
 .
 |-- .github/workflows
 |-- src
-|   |-- data
-|   |-- pages
-|   `-- utils
+|   |-- data        # reusable test data
+|   |-- pages       # page objects
+|   `-- utils       # shared helpers for DemoQA-specific behavior
 |-- tests
-|   |-- fixtures
-|   `-- *.spec.ts
+|   |-- fixtures    # upload files and other static test assets
+|   `-- *.spec.ts   # Playwright specs
 |-- eslint.config.mjs
 |-- playwright.config.ts
 `-- tsconfig.json
 ```
 
-## Commands
+## Architecture notes
 
-```bash
-npm test
-npm run test:headed
-npm run lint
-npm run format:check
-npm run typecheck
-```
+- The suite uses `Page Object` classes to keep selectors and page actions out of spec files.
+- Test data is stored separately in `src/data`, so scenarios stay readable and easy to change.
+- `src/utils/demoqa-ui.ts` contains helpers for handling DemoQA-specific UI noise such as ads and layout interference.
 
-## Coverage
+## DemoQA notes
 
-- `tests/forms.spec.ts`
-- `tests/web-tables.spec.ts`
-- `tests/alerts.spec.ts`
-- `tests/drag-and-drop.spec.ts`
+`DemoQA` is useful for automation practice, but some widgets are not perfectly stable in headless runs.
+
+Because of that:
+
+- modal assertions use actual rendered DOM instead of semantic assumptions
+- alert coverage uses controlled dialog mocking to make behavior deterministic in automation
+- drag and drop uses a stabilization fallback after a real drag attempt because the DemoQA widget can be flaky in automated browser runs
 
 ## CI
 
-GitHub Actions installs dependencies, installs Playwright browsers, and runs formatting, linting, type checking, and the Playwright suite on each push and pull request to `main` or `master`.
+GitHub Actions runs on pushes and pull requests for `main` and `master` and performs:
+
+- dependency installation
+- formatting check
+- linting
+- type checking
+- Playwright test execution
+
+## Next possible extensions
+
+- add coverage for buttons and double-click / right-click interactions
+- add coverage for dynamic properties and tables pagination
+- add tags or projects for smoke vs regression runs
+- add Allure or richer reporting if needed

@@ -1,0 +1,35 @@
+{
+  "name": "dmbiel-demoqa-playwright",
+  "version": "1.0.0",
+  "description": "UI-tests of DemoQA (Playwright + GitHub Actions CI)",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmbiel/dmbiel-demoqa-playwright.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dmbiel/dmbiel-demoqa-playwright/issues"
+  },
+  "homepage": "https://github.com/dmbiel/dmbiel-demoqa-playwright#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.5.2",
+    "eslint": "^10.2.0",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.1"
+  }
+}

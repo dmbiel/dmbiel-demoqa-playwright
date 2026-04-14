@@ -31,9 +31,7 @@ export class TextBoxPage {
     const output = this.page.locator('#output');
 
     await expect(output).toBeVisible();
-    await expect(output.locator('#name')).toHaveText(
-      `Name:${data.fullName}`,
-    );
+    await expect(output.locator('#name')).toHaveText(`Name:${data.fullName}`);
     await expect(output.locator('#email')).toHaveText(`Email:${data.email}`);
     await expect(output.locator('#currentAddress')).toHaveText(
       `Current Address :${data.currentAddress}`,

@@ -6,31 +6,22 @@ on:
   pull_request:
     branches: [main, master]
 
-permissions:
-  contents: read
-  packages: read
-
-env:
-  CHECKS_IMAGE: ghcr.io/${{ github.repository_owner }}/dmbiel-demoqa-playwright-checks:latest
-  E2E_IMAGE: ghcr.io/${{ github.repository_owner }}/dmbiel-demoqa-playwright-e2e:latest
-
 jobs:
   checks:
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    container:
-      image: ${{ env.CHECKS_IMAGE }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v6
 
-      - name: Link prebuilt checks dependencies
-        run: |
-          rm -rf node_modules
-          ln -s /opt/checks-deps/node_modules node_modules
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Check formatting
         run: npm run format:check
@@ -44,19 +35,32 @@ jobs:
   e2e:
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    container:
-      image: ${{ env.E2E_IMAGE }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v6
 
-      - name: Link prebuilt e2e runtime dependencies
-        run: |
-          rm -rf node_modules
-          ln -s /opt/e2e-deps/node_modules node_modules
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-chromium-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright system dependencies
+        run: npx playwright install-deps
+
+      - name: Install Playwright chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install chromium
 
       - name: Run Playwright tests
         run: npm test

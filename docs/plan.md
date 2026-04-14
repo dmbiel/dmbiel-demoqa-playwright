@@ -3,23 +3,25 @@
 ## Current state
 
 - Playwright + TypeScript project structure is in place
-- ESLint and Prettier are configured and used across the repository
+- ESLint and Prettier are configured and enforced in CI
 - End-to-end coverage is implemented for:
   - Practice Form
   - Web Tables
   - Alerts
   - Drag and Drop
-- GitHub Actions runs formatting, linting, type checking, and Playwright tests
-- A dedicated `healthcheck` Playwright project is planned as the execution precondition for all other test packages
+- Test execution is organized into `healthcheck`, `smoke`, and `regression` layers
+- `healthcheck` is wired as a Playwright project dependency for broader packages
+- GitHub Actions is split into `checks` and `e2e` jobs
+- The `e2e` job is optimized for `chromium` only and uses a dedicated Playwright browser cache
+- A separate `publish-ci-images` workflow builds preconfigured CI images for `checks` and `e2e` in `ghcr.io`
 
 ## Coverage expansion roadmap
 
 ### 1. Healthcheck and smoke foundation
 
-- add a dedicated `healthcheck.spec.ts` in `tests`
-- validate homepage availability, title, header/logo, and main category cards
-- verify that the most important entry-point navigation works
-- keep this layer fast and stable so it can serve as the precondition for broader UI coverage
+- keep `healthcheck` fast and stable so it remains the entry condition for broader UI coverage
+- expand `smoke` with one reliable happy path per major DemoQA area
+- keep package boundaries clear so CI can later target only the needed layer
 
 ### 2. Core navigation coverage
 
@@ -54,6 +56,13 @@
 - add optional console-error checks for critical failures
 - add lightweight assertions for important layout anchors before deeper scenario execution
 
+### 5. CI and image maturity
+
+- complete the rollout from runner-based setup to prebuilt GHCR images for `checks` and `e2e`
+- keep Playwright image version aligned with `package-lock.json`
+- document image publishing, rollback, and cache behavior alongside the test architecture
+- consider selective workflow triggers or path filters once the suite grows
+
 ## Proposed execution layers
 
 - `healthcheck`
@@ -67,10 +76,10 @@
 
 ## Short-term next steps
 
-- implement the dedicated `healthcheck` package and wire it as a dependency for other Playwright projects
+- complete the GHCR image rollout after the publish workflow is available on `main`
 - add a `navigation` package after the healthcheck layer is stable
 - expand smoke coverage for `Text Box` and `Buttons`
-- document file organization for healthcheck, smoke, and regression packages before the suite grows further
+- keep docs synchronized with the current setup, CI layers, and container strategy
 
 ## Maintenance rules
 
@@ -79,3 +88,4 @@
 - keep shared DemoQA-specific helpers in `src/utils`
 - use Playwright project dependencies when a package must act as a precondition for another package
 - run `npm run format`, `npm run lint`, `npm run typecheck`, and `npm test` before commits when practical
+- keep CI image changes in sync with `package.json`, `package-lock.json`, and the workflow rollout plan

@@ -10,9 +10,9 @@ ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
     EXPECTED_PLAYWRIGHT_VERSION=${PLAYWRIGHT_VERSION}
 
 COPY package.json package-lock.json ./
-COPY docker/ci/scripts/build-e2e-runtime-package.js ./docker/ci/scripts/
+COPY docker/ci/scripts/build-e2e-runtime-package.mjs ./docker/ci/scripts/
 
-RUN node ./docker/ci/scripts/build-e2e-runtime-package.js
+RUN node ./docker/ci/scripts/build-e2e-runtime-package.mjs
 
 RUN mkdir -p /opt/e2e-deps \
   && cp package.runtime.json /opt/e2e-deps/package.json \

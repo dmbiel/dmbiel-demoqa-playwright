@@ -1,4 +1,4 @@
-const fs = require('node:fs');
+import fs from 'node:fs';
 
 const packageJsonPath = 'package.json';
 const packageLockPath = 'package-lock.json';

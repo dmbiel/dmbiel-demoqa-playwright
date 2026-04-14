@@ -1,0 +1,65 @@
+name: Publish CI Images
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - package.json
+      - package-lock.json
+      - docker/ci/**
+      - .dockerignore
+      - .github/workflows/publish-ci-images.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: publish-ci-images-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  CHECKS_IMAGE: ghcr.io/${{ github.repository_owner }}/dmbiel-demoqa-playwright-checks
+  E2E_IMAGE: ghcr.io/${{ github.repository_owner }}/dmbiel-demoqa-playwright-e2e
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: checks
+            dockerfile: docker/ci/checks.Dockerfile
+            image: ghcr.io/${{ github.repository_owner }}/dmbiel-demoqa-playwright-checks
+          - name: e2e
+            dockerfile: docker/ci/e2e.Dockerfile
+            image: ghcr.io/${{ github.repository_owner }}/dmbiel-demoqa-playwright-e2e
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push ${{ matrix.name }} image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: |
+            ${{ matrix.image }}:latest
+            ${{ matrix.image }}:${{ github.sha }}
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+

@@ -6,20 +6,31 @@ on:
   pull_request:
     branches: [main, master]
 
+permissions:
+  contents: read
+  packages: read
+
+env:
+  CHECKS_IMAGE: ghcr.io/${{ github.repository_owner }}/dmbiel-demoqa-playwright-checks:latest
+  E2E_IMAGE: ghcr.io/${{ github.repository_owner }}/dmbiel-demoqa-playwright-e2e:latest
+
 jobs:
-  test:
-    timeout-minutes: 30
+  checks:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
+    container:
+      image: ${{ env.CHECKS_IMAGE }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-
-      - name: Install dependencies
-        run: npm ci
+      - name: Link prebuilt checks dependencies
+        run: |
+          rm -rf node_modules
+          ln -s /opt/checks-deps/node_modules node_modules
 
       - name: Check formatting
         run: npm run format:check
@@ -30,13 +41,27 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+  e2e:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ env.E2E_IMAGE }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Link prebuilt e2e runtime dependencies
+        run: |
+          rm -rf node_modules
+          ln -s /opt/e2e-deps/node_modules node_modules
 
       - name: Run Playwright tests
         run: npm test
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: ${{ !cancelled() }}
         with:
           name: playwright-report

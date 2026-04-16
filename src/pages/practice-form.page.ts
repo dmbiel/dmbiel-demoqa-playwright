@@ -27,9 +27,11 @@ export class PracticeFormPage {
   }
 
   private subjectOption(subject: string): Locator {
-    return this.page.locator('.subjects-auto-complete__menu').getByText(subject, {
-      exact: true,
-    });
+    return this.page
+      .locator('.subjects-auto-complete__menu')
+      .getByText(subject, {
+        exact: true,
+      });
   }
 
   async goto(): Promise<void> {

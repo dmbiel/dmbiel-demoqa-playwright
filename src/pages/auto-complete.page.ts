@@ -47,7 +47,9 @@ export class AutoCompletePage {
 
   async expectSingleColor(color: string): Promise<void> {
     await expect(
-      this.page.locator('#autoCompleteSingleContainer .auto-complete__single-value'),
+      this.page.locator(
+        '#autoCompleteSingleContainer .auto-complete__single-value',
+      ),
     ).toHaveText(color);
   }
 }

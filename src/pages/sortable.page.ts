@@ -53,9 +53,8 @@ export class SortablePage {
 
     await this.page.evaluate(() => {
       const container = document.querySelector('.vertical-list-container');
-      const sortableItems = container?.querySelectorAll<HTMLElement>(
-        '.list-group-item',
-      );
+      const sortableItems =
+        container?.querySelectorAll<HTMLElement>('.list-group-item');
 
       if (!container || !sortableItems || sortableItems.length < 3) {
         throw new Error('Sortable list container was not found.');

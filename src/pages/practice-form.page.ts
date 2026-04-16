@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import type {
   Gender,
@@ -22,6 +22,16 @@ const hobbyInputIds: Record<Hobby, string> = {
 export class PracticeFormPage {
   constructor(private readonly page: Page) {}
 
+  private subjectsInput(): Locator {
+    return this.page.locator('#subjectsInput');
+  }
+
+  private subjectOption(subject: string): Locator {
+    return this.page.locator('.subjects-auto-complete__menu').getByText(subject, {
+      exact: true,
+    });
+  }
+
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/automation-practice-form');
     await expect(
@@ -41,8 +51,8 @@ export class PracticeFormPage {
     await this.setDateOfBirth(form.dateOfBirth);
 
     for (const subject of form.subjects) {
-      await this.page.locator('#subjectsInput').fill(subject);
-      await this.page.locator('#subjectsInput').press('Enter');
+      await this.subjectsInput().fill(subject);
+      await this.subjectOption(subject).click();
     }
 
     for (const hobby of form.hobbies) {

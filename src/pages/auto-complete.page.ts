@@ -1,9 +1,24 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import { openDemoQaPage } from '../utils/demoqa-ui';
 
 export class AutoCompletePage {
   constructor(private readonly page: Page) {}
+
+  private singleInput(): Locator {
+    return this.page.locator('#autoCompleteSingleInput');
+  }
+
+  private multipleInput(): Locator {
+    return this.page.locator('#autoCompleteMultipleInput');
+  }
+
+  private optionByText(color: string): Locator {
+    return this.page
+      .locator('.auto-complete__menu')
+      .last()
+      .getByText(color, { exact: true });
+  }
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/auto-complete');
@@ -13,11 +28,9 @@ export class AutoCompletePage {
   }
 
   async selectMultipleColors(colors: string[]): Promise<void> {
-    const input = this.page.locator('#autoCompleteMultipleInput');
-
     for (const color of colors) {
-      await input.fill(color);
-      await input.press('Enter');
+      await this.multipleInput().fill(color);
+      await this.optionByText(color).click();
     }
   }
 
@@ -28,15 +41,13 @@ export class AutoCompletePage {
   }
 
   async selectSingleColor(color: string): Promise<void> {
-    const input = this.page.locator('#autoCompleteSingleInput');
-
-    await input.fill(color);
-    await input.press('Enter');
+    await this.singleInput().fill(color);
+    await this.optionByText(color).click();
   }
 
   async expectSingleColor(color: string): Promise<void> {
-    await expect(this.page.locator('#autoCompleteSingleInput')).toHaveValue(
-      color,
-    );
+    await expect(
+      this.page.locator('#autoCompleteSingleContainer .auto-complete__single-value'),
+    ).toHaveText(color);
   }
 }

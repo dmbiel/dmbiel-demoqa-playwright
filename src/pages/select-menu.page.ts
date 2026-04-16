@@ -1,9 +1,19 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import { openDemoQaPage } from '../utils/demoqa-ui';
 
 export class SelectMenuPage {
   constructor(private readonly page: Page) {}
+
+  private valueInput(): Locator {
+    return this.page.locator('#react-select-2-input');
+  }
+
+  private valueOption(optionText: string): Locator {
+    return this.page.locator('#react-select-2-listbox').getByText(optionText, {
+      exact: true,
+    });
+  }
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/select-menu');
@@ -14,8 +24,8 @@ export class SelectMenuPage {
 
   async selectValue(optionText: string): Promise<void> {
     await this.page.locator('#withOptGroup').click();
-    await this.page.locator('#react-select-2-input').fill(optionText);
-    await this.page.locator('#react-select-2-input').press('Enter');
+    await this.valueInput().fill(optionText);
+    await this.valueOption(optionText).click();
   }
 
   async expectSelectedValue(optionText: string): Promise<void> {

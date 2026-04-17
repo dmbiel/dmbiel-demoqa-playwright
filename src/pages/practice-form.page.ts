@@ -73,6 +73,20 @@ export class PracticeFormPage {
     await this.page.locator('#submit').click();
   }
 
+  async fillRequiredFieldsOnly(
+    form: Pick<
+      PracticeFormData,
+      'firstName' | 'lastName' | 'gender' | 'mobile'
+    >,
+  ): Promise<void> {
+    await this.page.getByPlaceholder('First Name').fill(form.firstName);
+    await this.page.getByPlaceholder('Last Name').fill(form.lastName);
+    await this.page
+      .locator(`label[for="${genderInputIds[form.gender]}"]`)
+      .click();
+    await this.page.locator('#userNumber').fill(form.mobile);
+  }
+
   async expectSuccessfulSubmission(form: PracticeFormData): Promise<void> {
     const modal = this.page.locator('.modal-content');
 
@@ -100,6 +114,46 @@ export class PracticeFormPage {
       'State and City',
       `${form.state} ${form.city}`,
     );
+  }
+
+  async expectSubmissionModalHidden(): Promise<void> {
+    await expect(this.page.locator('.modal-content')).not.toBeVisible();
+  }
+
+  async expectRequiredFieldErrors(): Promise<void> {
+    await expect(this.page.getByPlaceholder('First Name')).toHaveJSProperty(
+      'validationMessage',
+      'Please fill out this field.',
+    );
+    await expect(this.page.getByPlaceholder('Last Name')).toHaveJSProperty(
+      'validationMessage',
+      'Please fill out this field.',
+    );
+    await expect(this.page.locator('#userNumber')).toHaveJSProperty(
+      'validationMessage',
+      'Please fill out this field.',
+    );
+    await expect(this.page.locator('#genterWrapper')).toContainText('Gender');
+  }
+
+  async expectInvalidMobileValidationMessage(): Promise<void> {
+    await expect
+      .poll(async () => {
+        return this.page.evaluate(() => {
+          const input = document.querySelector<HTMLInputElement>('#userNumber');
+          return input?.checkValidity() ?? true;
+        });
+      })
+      .toBe(false);
+
+    await expect
+      .poll(async () => {
+        return this.page.evaluate(() => {
+          const input = document.querySelector<HTMLInputElement>('#userNumber');
+          return input?.validationMessage ?? '';
+        });
+      })
+      .toContain('10 characters');
   }
 
   private async setDateOfBirth(dateOfBirth: PracticeFormData['dateOfBirth']) {

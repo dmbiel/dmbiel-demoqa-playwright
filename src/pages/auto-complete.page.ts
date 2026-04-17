@@ -20,6 +20,18 @@ export class AutoCompletePage {
       .getByText(color, { exact: true });
   }
 
+  private multipleValueLabel(color: string): Locator {
+    return this.page
+      .locator('#autoCompleteMultipleContainer')
+      .getByText(color, {
+        exact: true,
+      });
+  }
+
+  private removeMultipleValueButton(color: string): Locator {
+    return this.page.getByRole('button', { name: `Remove ${color}` });
+  }
+
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/auto-complete');
     await expect(
@@ -51,5 +63,13 @@ export class AutoCompletePage {
         '#autoCompleteSingleContainer .auto-complete__single-value',
       ),
     ).toHaveText(color);
+  }
+
+  async removeMultipleColor(color: string): Promise<void> {
+    await this.removeMultipleValueButton(color).click();
+  }
+
+  async expectMultipleColorRemoved(color: string): Promise<void> {
+    await expect(this.multipleValueLabel(color)).not.toBeVisible();
   }
 }

@@ -32,4 +32,28 @@ export class LinksPage {
       'Link has responded with staus 201 and status text Created',
     );
   }
+
+  async openDynamicHomeLinkInNewTab(): Promise<Page> {
+    const [popup] = await Promise.all([
+      this.page.waitForEvent('popup'),
+      this.page.getByRole('link', { name: 'Home' }).last().click(),
+    ]);
+
+    await popup.waitForLoadState('domcontentloaded');
+
+    return popup;
+  }
+
+  async triggerApiLink(linkName: string): Promise<void> {
+    await this.page.getByRole('link', { name: linkName }).click();
+  }
+
+  async expectApiLinkResponse(
+    statusCode: number,
+    statusText: string,
+  ): Promise<void> {
+    await expect(this.page.locator('#linkResponse')).toContainText(
+      `Link has responded with staus ${statusCode} and status text ${statusText}`,
+    );
+  }
 }

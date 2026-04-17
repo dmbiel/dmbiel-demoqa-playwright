@@ -29,4 +29,20 @@ export class RadioButtonPage {
   async expectNoOptionDisabled(): Promise<void> {
     await expect(this.page.locator('#noRadio')).toBeDisabled();
   }
+
+  async expectYesChecked(): Promise<void> {
+    await expect(this.page.locator('#yesRadio')).toBeChecked();
+  }
+
+  async expectImpressiveChecked(): Promise<void> {
+    await expect(this.page.locator('#impressiveRadio')).toBeChecked();
+  }
+
+  async expectYesNotChecked(): Promise<void> {
+    await expect(this.page.locator('#yesRadio')).not.toBeChecked();
+  }
+
+  async expectNoSelectionResult(): Promise<void> {
+    await expect(this.page.locator('.text-success')).not.toBeVisible();
+  }
 }

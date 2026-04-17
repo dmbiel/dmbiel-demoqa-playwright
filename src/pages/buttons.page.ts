@@ -35,4 +35,22 @@ export class ButtonsPage {
       'You have done a dynamic click',
     );
   }
+
+  async expectDoubleClickMessage(): Promise<void> {
+    await expect(this.page.locator('#doubleClickMessage')).toHaveText(
+      'You have done a double click',
+    );
+  }
+
+  async expectRightClickMessage(): Promise<void> {
+    await expect(this.page.locator('#rightClickMessage')).toHaveText(
+      'You have done a right click',
+    );
+  }
+
+  async expectDynamicClickMessage(): Promise<void> {
+    await expect(this.page.locator('#dynamicClickMessage')).toHaveText(
+      'You have done a dynamic click',
+    );
+  }
 }

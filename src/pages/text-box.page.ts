@@ -27,6 +27,11 @@ export class TextBoxPage {
     await this.page.locator('#submit').click({ force: true });
   }
 
+  async fillInvalidEmailAndSubmit(email: string): Promise<void> {
+    await this.page.locator('#userEmail').fill(email);
+    await this.page.locator('#submit').click({ force: true });
+  }
+
   async expectSubmittedValues(data: TextBoxFormData): Promise<void> {
     const output = this.page.locator('#output');
 
@@ -39,5 +44,13 @@ export class TextBoxPage {
     await expect(output.locator('#permanentAddress')).toHaveText(
       `Permananet Address :${data.permanentAddress}`,
     );
+  }
+
+  async expectNoSubmissionOutput(): Promise<void> {
+    await expect(this.page.locator('#output')).not.toBeVisible();
+  }
+
+  async expectEmailFieldMarkedInvalid(): Promise<void> {
+    await expect(this.page.locator('#userEmail')).toHaveClass(/field-error/);
   }
 }

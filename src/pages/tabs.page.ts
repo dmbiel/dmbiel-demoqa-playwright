@@ -48,4 +48,23 @@ export class TabsPage {
       'It is a long established fact that a reader will be distracted',
     );
   }
+
+  async expectMoreTabDisabled(): Promise<void> {
+    await expect(this.page.getByRole('tab', { name: 'More' })).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
+  }
+
+  async tryToOpenMoreTab(): Promise<void> {
+    await this.page.getByRole('tab', { name: 'More' }).click({ force: true });
+  }
+
+  async expectWhatTabStillVisible(): Promise<void> {
+    await expect(this.page.getByRole('tab', { name: 'What' })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    await expect(this.page.locator('#demo-tabpane-what')).toBeVisible();
+  }
 }

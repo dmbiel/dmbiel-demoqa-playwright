@@ -31,4 +31,24 @@ export class ToolTipsPage {
       this.page.getByText('You hovered over the text field'),
     ).toBeVisible();
   }
+
+  async hoverOverContraryLink(): Promise<void> {
+    await this.page.getByText('Contrary', { exact: true }).hover();
+  }
+
+  async expectContraryTooltip(): Promise<void> {
+    await expect(
+      this.page.getByText('You hovered over the Contrary'),
+    ).toBeVisible();
+  }
+
+  async hoverOverSectionNumberLink(): Promise<void> {
+    await this.page.getByText('1.10.32', { exact: true }).hover();
+  }
+
+  async expectSectionNumberTooltip(): Promise<void> {
+    await expect(
+      this.page.getByText('You hovered over the 1.10.32'),
+    ).toBeVisible();
+  }
 }

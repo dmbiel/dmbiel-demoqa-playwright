@@ -4,48 +4,85 @@
 
 - Playwright + TypeScript project structure is in place
 - ESLint and Prettier are configured and used across the repository
-- End-to-end coverage is implemented for:
-  - Practice Form
-  - Web Tables
-  - Alerts
-  - Drag and Drop
+- A dedicated `healthcheck` Playwright project is implemented and configured as a dependency for broader UI packages
+- `smoke` coverage is implemented for key DemoQA flows across:
+  - homepage navigation and platform healthcheck
+  - `Elements`
+    - Text Box
+    - Buttons
+    - Check Box
+    - Radio Button
+    - Links
+    - Web Tables
+  - `Widgets`
+    - Tabs
+    - Select Menu
+    - Tool Tips
+    - Progress Bar
+    - Accordian
+    - Date Picker
+    - Slider
+    - Menu
+    - Auto Complete
+  - `Interactions`
+    - Sortable
+    - Selectable
+    - Resizable
+    - Droppable
+    - Dragabble
+- `regression` coverage is implemented for:
+  - `Alerts`
+  - `Forms / Practice Form`
+  - `Elements`
+    - Web Tables
+    - Buttons
+    - Links
+    - Text Box
+    - Radio Button
+  - `Widgets`
+    - Select Menu
+    - Date Picker
+    - Auto Complete
+  - `Interactions`
+    - Droppable
+    - Dragabble
+    - Resizable
+    - Selectable
 - GitHub Actions runs formatting, linting, type checking, and Playwright tests
-- A dedicated `healthcheck` Playwright project is planned as the execution precondition for all other test packages
 
 ## Coverage expansion roadmap
 
 ### 1. Healthcheck and smoke foundation
 
-- add a dedicated `healthcheck.spec.ts` in `tests`
+- keep the dedicated `healthcheck.spec.ts` stable and fast
 - validate homepage availability, title, header/logo, and main category cards
 - verify that the most important entry-point navigation works
-- keep this layer fast and stable so it can serve as the precondition for broader UI coverage
+- preserve this layer as the execution precondition for broader UI coverage
 
 ### 2. Core navigation coverage
 
-- validate navigation from the homepage into the main DemoQA sections
-- verify left-side navigation rendering after section entry
-- cover direct deep links for critical pages such as Forms, Web Tables, Alerts, and Droppable
-- confirm that section headings and active navigation states are correct
+- keep homepage and section-entry navigation covered through `healthcheck` and `smoke`
+- preserve left-side navigation validation after section entry
+- extend direct deep-link coverage where additional regression value appears
+- confirm section headings and active navigation states for newly added areas
 
 ### 3. Expanded widget and interaction coverage
 
 - `Elements`
-  - Text Box
-  - Buttons
   - Check Box
-  - Radio Button
-  - Links
+  - extend `Web Tables` edge cases if needed
+  - deepen `Check Box`
+  - consider deeper `Links` API-response coverage if practical
 - `Widgets`
-  - Accordian
   - Tabs
   - Tool Tips
   - Progress Bar
-  - Select Menu
+  - Accordian
+  - expand `Select Menu`, `Date Picker`, and `Auto Complete` only if additional edge cases justify it
 - `Interactions`
-  - Selectable
   - Sortable
-  - Resizable
+  - deepen `Sortable`
+  - consider additional edge cases for `Droppable` and `Dragabble` only if they remain stable
 
 ### 4. Contract-like UI checks
 
@@ -67,10 +104,10 @@
 
 ## Short-term next steps
 
-- implement the dedicated `healthcheck` package and wire it as a dependency for other Playwright projects
-- add a `navigation` package after the healthcheck layer is stable
-- expand smoke coverage for `Text Box` and `Buttons`
-- document file organization for healthcheck, smoke, and regression packages before the suite grows further
+- continue `Widgets` regression with `Tabs`
+- continue `Widgets` regression with `Tool Tips` and `Progress Bar`
+- expand `Elements` regression further where edge cases bring real value
+- keep running targeted checks plus periodic full `regression` project runs as the suite grows
 
 ## Maintenance rules
 

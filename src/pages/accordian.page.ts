@@ -54,4 +54,22 @@ export class AccordianPage {
       ),
     ).toBeVisible();
   }
+
+  async expectFirstSectionCollapsed(): Promise<void> {
+    await expect(
+      this.page.getByRole('button', { name: 'What is Lorem Ipsum?' }),
+    ).toHaveAttribute('aria-expanded', 'false');
+  }
+
+  async expectSecondSectionCollapsed(): Promise<void> {
+    await expect(
+      this.page.getByRole('button', { name: 'Where does it come from?' }),
+    ).toHaveAttribute('aria-expanded', 'false');
+  }
+
+  async expectThirdSectionCollapsed(): Promise<void> {
+    await expect(
+      this.page.getByRole('button', { name: 'Why do we use it?' }),
+    ).toHaveAttribute('aria-expanded', 'false');
+  }
 }

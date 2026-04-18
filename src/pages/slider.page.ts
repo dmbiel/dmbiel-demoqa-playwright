@@ -21,4 +21,8 @@ export class SliderPage {
   async expectSliderValue(value: string): Promise<void> {
     await expect(this.page.locator('#sliderValue')).toHaveValue(value);
   }
+
+  async expectInitialSliderValue(value: string): Promise<void> {
+    await expect(this.page.locator('#sliderValue')).toHaveValue(value);
+  }
 }

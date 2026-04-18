@@ -16,6 +16,33 @@ export class MenuPage {
     await this.page.getByText('Main Item 2', { exact: true }).hover();
   }
 
+  async expectMainItemsVisible(): Promise<void> {
+    await expect(
+      this.page.getByText('Main Item 1', { exact: true }),
+    ).toBeVisible();
+    await expect(
+      this.page.getByText('Main Item 2', { exact: true }),
+    ).toBeVisible();
+    await expect(
+      this.page.getByText('Main Item 3', { exact: true }),
+    ).toBeVisible();
+  }
+
+  async expectSubMenuHidden(): Promise<void> {
+    await expect(
+      this.page.getByText('SUB SUB LIST »', { exact: true }),
+    ).not.toBeVisible();
+  }
+
+  async expectNestedItemsHidden(): Promise<void> {
+    await expect(
+      this.page.getByText('Sub Sub Item 1', { exact: true }),
+    ).not.toBeVisible();
+    await expect(
+      this.page.getByText('Sub Sub Item 2', { exact: true }),
+    ).not.toBeVisible();
+  }
+
   async expectSubMenuVisible(): Promise<void> {
     await expect(
       this.page.getByText('SUB SUB LIST »', { exact: true }),

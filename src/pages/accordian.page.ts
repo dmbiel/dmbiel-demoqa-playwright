@@ -12,7 +12,9 @@ export class AccordianPage {
     await openDemoQaPage(this.page, '/accordian');
     await expectDemoQaContentPageReady(this.page, {
       heading: 'Accordian',
-      primaryControls: [this.page.locator('#section1Heading')],
+      primaryControls: [
+        this.page.getByRole('button', { name: 'What is Lorem Ipsum?' }),
+      ],
     });
   }
 

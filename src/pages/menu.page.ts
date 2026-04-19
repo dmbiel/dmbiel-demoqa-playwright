@@ -12,7 +12,7 @@ export class MenuPage {
     await openDemoQaPage(this.page, '/menu');
     await expectDemoQaContentPageReady(this.page, {
       heading: 'Menu',
-      primaryControls: [this.page.locator('#nav')],
+      primaryControls: [this.page.getByText('Main Item 1', { exact: true })],
     });
   }
 

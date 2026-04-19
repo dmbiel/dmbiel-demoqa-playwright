@@ -57,13 +57,21 @@ export async function expectDemoQaContentPageReady(
   page: Page,
   contract: DemoQaContentPageContract,
 ): Promise<void> {
-  const pageHeading = page.locator('.main-header');
-
   await expect(page.locator('header')).toBeVisible();
   await expect(page.locator('header a img')).toBeVisible();
   await expect(page.locator('.left-pannel')).toBeVisible();
-  await expect(pageHeading).toBeVisible();
-  await expect(pageHeading).toHaveText(contract.heading);
+  if (typeof contract.heading === 'string') {
+    await expect(
+      page.getByRole('heading', {
+        name: contract.heading,
+        exact: true,
+      }),
+    ).toBeVisible();
+  } else {
+    await expect(
+      page.getByRole('heading', { name: contract.heading }),
+    ).toBeVisible();
+  }
   await expectNoBrokenShell(page);
 
   for (const primaryControl of contract.primaryControls ?? []) {

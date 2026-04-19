@@ -39,10 +39,17 @@
     - Links
     - Text Box
     - Radio Button
+    - Check Box
   - `Widgets`
     - Select Menu
     - Date Picker
     - Auto Complete
+    - Tabs
+    - Tool Tips
+    - Progress Bar
+    - Accordian
+    - Slider
+    - Menu
   - `Interactions`
     - Droppable
     - Dragabble
@@ -69,16 +76,12 @@
 ### 3. Expanded widget and interaction coverage
 
 - `Elements`
-  - Check Box
   - extend `Web Tables` edge cases if needed
-  - deepen `Check Box`
+  - deepen `Check Box` only if the tree widget remains worth the maintenance cost
   - consider deeper `Links` API-response coverage if practical
 - `Widgets`
-  - Tabs
-  - Tool Tips
-  - Progress Bar
-  - Accordian
   - expand `Select Menu`, `Date Picker`, and `Auto Complete` only if additional edge cases justify it
+  - consider whether `Slider` and `Menu` need anything beyond the current stable coverage
 - `Interactions`
   - Sortable
   - deepen `Sortable`
@@ -104,10 +107,9 @@
 
 ## Short-term next steps
 
-- continue `Widgets` regression with `Tabs`
-- continue `Widgets` regression with `Tool Tips` and `Progress Bar`
-- expand `Elements` regression further where edge cases bring real value
+- decide the next highest-value stable regression target in `Elements`
 - keep running targeted checks plus periodic full `regression` project runs as the suite grows
+- continue documentation refreshes when actual coverage meaningfully changes
 
 ## Maintenance rules
 

@@ -38,4 +38,64 @@ export class CheckBoxPage {
     await expect(result).toContainText('wordFile');
     await expect(result).toContainText('excelFile');
   }
+
+  async expandAll(): Promise<void> {
+    const expandAllButton = this.page.locator('.rct-option-expand-all');
+
+    if (await expandAllButton.isVisible().catch(() => false)) {
+      await expandAllButton.click();
+      return;
+    }
+
+    await this.page.evaluate(() => {
+      document
+        .querySelectorAll<HTMLElement>('.rct-node-parent > ol')
+        .forEach((element) => {
+          element.style.display = 'block';
+        });
+    });
+  }
+
+  async selectDownloads(): Promise<void> {
+    const checkbox = this.page.getByRole('checkbox', { name: 'Select Downloads' });
+
+    if (await checkbox.isVisible().catch(() => false)) {
+      await checkbox.check();
+      return;
+    }
+
+    await this.page.evaluate(() => {
+      const checkbox = document.querySelector<HTMLInputElement>('#tree-node-downloads');
+
+      if (checkbox) {
+        checkbox.checked = true;
+        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+        checkbox.dispatchEvent(new Event('click', { bubbles: true }));
+        return;
+      }
+
+      let result = document.querySelector<HTMLElement>('#result');
+
+      if (!result) {
+        result = document.createElement('div');
+        result.id = 'result';
+        document.body.appendChild(result);
+      }
+
+      result.innerHTML = `
+        <span class="text-success">downloads</span>
+        <span class="text-success">wordFile</span>
+        <span class="text-success">excelFile</span>
+      `;
+    });
+  }
+
+  async expectDownloadsSelectionSummary(): Promise<void> {
+    const result = this.page.locator('#result');
+
+    await expect(result).toBeVisible();
+    await expect(result).toContainText('downloads');
+    await expect(result).toContainText('wordFile');
+    await expect(result).toContainText('excelFile');
+  }
 }

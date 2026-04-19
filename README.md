@@ -24,13 +24,14 @@ The repository is focused on practical browser automation scenarios around:
 Install dependencies:
 
 ```bash
-npm install
+npm ci
 ```
 
-Install Playwright browsers:
+Install Playwright system dependencies and the local Chromium browser:
 
 ```bash
-npx playwright install
+npx playwright install-deps
+npx playwright install chromium
 ```
 
 Run the full test suite:
@@ -49,6 +50,12 @@ Run only the smoke project:
 
 ```bash
 npm test -- --project smoke
+Run quality checks locally:
+
+```bash
+npm run format:check
+npm run lint
+npm run typecheck
 ```
 
 ## Available scripts
@@ -126,15 +133,22 @@ Current automated scenarios:
 ```text
 .
 |-- .github/workflows
+|-- docker/ci
+|   |-- checks.Dockerfile         # prebuilt image for lint / format / typecheck
+|   |-- e2e.Dockerfile            # prebuilt Playwright runtime image
+|   `-- scripts                   # helper scripts for CI image assembly
 |-- src
 |   |-- data        # reusable test data
 |   |-- pages       # page objects
 |   `-- utils       # shared helpers for DemoQA-specific behavior
 |-- tests
 |   |-- fixtures    # upload files and other static test assets
-|   |-- smoke       # happy-path scenarios
-|   |-- regression  # deeper scenarios and edge cases
+|   |-- regression  # broader scenario coverage
+|   |-- smoke       # high-value happy paths
 |   `-- healthcheck.spec.ts
+|-- docs
+|   |-- ci-pipelines.md
+|   `-- plan.md
 |-- eslint.config.mjs
 |-- playwright.config.ts
 `-- tsconfig.json
@@ -159,17 +173,33 @@ Because of that:
 
 ## CI
 
-GitHub Actions runs on pushes and pull requests for `main` and `master` and performs:
+The main GitHub Actions workflow runs on pushes and pull requests for `main` and `master`.
 
-- dependency installation
-- formatting check
-- linting
-- type checking
-- Playwright test execution
+It is split into two jobs:
+
+- `checks`
+  - installs dependencies with `npm ci`
+  - runs formatting, linting, and type checking
+- `e2e`
+  - installs dependencies with `npm ci`
+  - restores a dedicated cache for Playwright Chromium
+  - installs Playwright system dependencies
+  - installs `chromium` only when the browser cache is cold
+  - runs the Playwright suite
+  - uploads the HTML report artifact
+
+The repository also contains a separate workflow for publishing prebuilt CI images to `ghcr.io`.
+Those images are intended to support a more containerized CI path for:
+
+- `checks` toolchain reuse
+- Playwright runtime reuse in `e2e`
+- faster and more predictable setup once the image rollout is complete
+
+See [docs/ci-pipelines.md](/C:/Users/dimon/source/dmbiel-demoqa-playwright/docs/ci-pipelines.md) for the full pipeline notes, rollout strategy, and image-publishing details.
 
 ## Next possible extensions
 
-- continue deeper `Elements` regression where the value clearly outweighs the maintenance cost
-- keep extending stable `Widgets` and `Interactions` scenarios
-- add tags or project filtering conventions if the suite grows much larger
-- add richer reporting if it becomes useful for CI or triage
+- add coverage for buttons and double-click / right-click interactions
+- add coverage for dynamic properties and tables pagination
+- refine project tagging and selective CI execution for smoke vs regression paths
+- add Allure or richer reporting if needed

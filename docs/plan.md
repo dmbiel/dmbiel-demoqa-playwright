@@ -3,72 +3,25 @@
 ## Current state
 
 - Playwright + TypeScript project structure is in place
-- ESLint and Prettier are configured and used across the repository
-- A dedicated `healthcheck` Playwright project is implemented and configured as a dependency for broader UI packages
-- `smoke` coverage is implemented for key DemoQA flows across:
-  - homepage navigation and platform healthcheck
-  - `Elements`
-    - Text Box
-    - Buttons
-    - Check Box
-    - Radio Button
-    - Links
-    - Web Tables
-  - `Widgets`
-    - Tabs
-    - Select Menu
-    - Tool Tips
-    - Progress Bar
-    - Accordian
-    - Date Picker
-    - Slider
-    - Menu
-    - Auto Complete
-  - `Interactions`
-    - Sortable
-    - Selectable
-    - Resizable
-    - Droppable
-    - Dragabble
-- `regression` coverage is implemented for:
-  - `Alerts`
-  - `Forms / Practice Form`
-  - `Elements`
-    - Web Tables
-    - Buttons
-    - Links
-    - Text Box
-    - Radio Button
-    - Check Box
-  - `Widgets`
-    - Select Menu
-    - Date Picker
-    - Auto Complete
-    - Tabs
-    - Tool Tips
-    - Progress Bar
-    - Accordian
-    - Slider
-    - Menu
-  - `Interactions`
-    - Droppable
-    - Dragabble
-    - Resizable
-    - Selectable
-- baseline contract-like UI guardrails are implemented for critical DemoQA pages and section landing pages:
-  - shell rendering checks for homepage, section entries, and content pages
-  - guardrails for missing headings, missing primary controls, and obviously broken page states
-  - lightweight console/page error checks with filtering for known DemoQA noise
-- GitHub Actions runs formatting, linting, type checking, and Playwright tests
+- ESLint and Prettier are configured and enforced in CI
+- End-to-end coverage is implemented for:
+  - Practice Form
+  - Web Tables
+  - Alerts
+  - Drag and Drop
+- Test execution is organized into `healthcheck`, `smoke`, and `regression` layers
+- `healthcheck` is wired as a Playwright project dependency for broader packages
+- GitHub Actions is split into `checks` and `e2e` jobs
+- The `e2e` job is optimized for `chromium` only and uses a dedicated Playwright browser cache
+- A separate `publish-ci-images` workflow builds preconfigured CI images for `checks` and `e2e` in `ghcr.io`
 
 ## Coverage expansion roadmap
 
 ### 1. Healthcheck and smoke foundation
 
-- keep the dedicated `healthcheck.spec.ts` stable and fast
-- validate homepage availability, title, header/logo, and main category cards
-- verify that the most important entry-point navigation works
-- preserve this layer as the execution precondition for broader UI coverage
+- keep `healthcheck` fast and stable so it remains the entry condition for broader UI coverage
+- expand `smoke` with one reliable happy path per major DemoQA area
+- keep package boundaries clear so CI can later target only the needed layer
 
 ### 2. Core navigation coverage
 
@@ -99,6 +52,13 @@
 - keep console/page error checks focused on critical failures and continue filtering known DemoQA-specific noise
 - add more layout-anchor assertions only when they meaningfully protect deeper scenario execution
 
+### 5. CI and image maturity
+
+- complete the rollout from runner-based setup to prebuilt GHCR images for `checks` and `e2e`
+- keep Playwright image version aligned with `package-lock.json`
+- document image publishing, rollback, and cache behavior alongside the test architecture
+- consider selective workflow triggers or path filters once the suite grows
+
 ## Proposed execution layers
 
 - `healthcheck`
@@ -112,9 +72,10 @@
 
 ## Short-term next steps
 
-- decide the next highest-value stable regression target in `Elements`
-- keep running targeted checks plus periodic full `regression` project runs as the suite grows
-- continue documentation refreshes when actual coverage meaningfully changes
+- complete the GHCR image rollout after the publish workflow is available on `main`
+- add a `navigation` package after the healthcheck layer is stable
+- expand smoke coverage for `Text Box` and `Buttons`
+- keep docs synchronized with the current setup, CI layers, and container strategy
 
 ## Maintenance rules
 
@@ -123,3 +84,4 @@
 - keep shared DemoQA-specific helpers in `src/utils`
 - use Playwright project dependencies when a package must act as a precondition for another package
 - run `npm run format`, `npm run lint`, `npm run typecheck`, and `npm test` before commits when practical
+- keep CI image changes in sync with `package.json`, `package-lock.json`, and the workflow rollout plan

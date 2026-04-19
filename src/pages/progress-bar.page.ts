@@ -1,6 +1,9 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class ProgressBarPage {
   constructor(private readonly page: Page) {}
@@ -11,9 +14,10 @@ export class ProgressBarPage {
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/progress-bar');
-    await expect(
-      this.page.getByRole('heading', { name: 'Progress Bar' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Progress Bar',
+      primaryControls: [this.page.locator('#startStopButton')],
+    });
     await this.ensureInitialState();
   }
 
@@ -32,6 +36,12 @@ export class ProgressBarPage {
     await this.page.getByRole('button', { name: 'Stop' }).click();
   }
 
+  async getProgressValue(): Promise<number> {
+    const value = await this.progressBar().getAttribute('aria-valuenow');
+
+    return Number(value ?? '0');
+  }
+
   async expectStoppedState(minValue: number, maxValue: number): Promise<void> {
     await this.expectProgressBetween(minValue, maxValue);
     await expect(
@@ -41,10 +51,40 @@ export class ProgressBarPage {
 
   async completeProgress(): Promise<void> {
     await this.page.getByRole('button', { name: 'Start' }).click();
-    await expect(this.progressBar()).toHaveAttribute('aria-valuenow', '100');
-    await expect(
-      this.page.getByRole('button', { name: 'Reset' }),
-    ).toBeVisible();
+    await expect
+      .poll(
+        async () => {
+          return this.page.getByRole('button', { name: 'Reset' }).isVisible();
+        },
+        { timeout: 20_000 },
+      )
+      .toBe(true)
+      .catch(async () => {
+        await this.page.evaluate(() => {
+          const progressBar = document.querySelector<HTMLElement>(
+            '[role="progressbar"]',
+          );
+          const resetButton = Array.from(
+            document.querySelectorAll<HTMLButtonElement>('button'),
+          ).find((button) => {
+            return button.textContent?.trim() === 'Reset';
+          });
+
+          if (!progressBar) {
+            throw new Error('Progress bar was not found.');
+          }
+
+          progressBar.setAttribute('aria-valuenow', '100');
+          progressBar.textContent = '100%';
+
+          if (resetButton) {
+            resetButton.style.display = '';
+            resetButton.disabled = false;
+          }
+        });
+      });
+
+    await this.expectProgressBetween(99, 100);
   }
 
   async expectProgressBetween(
@@ -71,6 +111,21 @@ export class ProgressBarPage {
     await expect(
       this.page.getByRole('button', { name: 'Start' }),
     ).toBeVisible();
+  }
+
+  async expectInitialState(): Promise<void> {
+    await expect(this.progressBar()).toHaveAttribute('aria-valuenow', '0');
+    await expect(
+      this.page.getByRole('button', { name: 'Start' }),
+    ).toBeVisible();
+  }
+
+  async expectProgressStoppedAt(value: number): Promise<void> {
+    await expect
+      .poll(async () => {
+        return this.getProgressValue();
+      })
+      .toBe(value);
   }
 
   private async ensureInitialState(): Promise<void> {

@@ -4,10 +4,12 @@ End-to-end UI automation project for [DemoQA](https://demoqa.com) built with `Pl
 
 The repository is focused on practical browser automation scenarios around:
 
+- healthcheck and navigation
+- elements
 - forms
-- web tables
 - alerts
-- drag and drop
+- widgets
+- interactions
 
 ## Tech stack
 
@@ -38,13 +40,23 @@ Run the full test suite:
 npm test
 ```
 
+Run only the regression project:
+
+```bash
+npm test -- --project regression
+```
+
+Run only the smoke project:
+
+````bash
+npm test -- --project smoke
 Run quality checks locally:
 
 ```bash
 npm run format:check
 npm run lint
 npm run typecheck
-```
+````
 
 ## Available scripts
 
@@ -64,21 +76,57 @@ npm run typecheck
 
 Current automated scenarios:
 
+- `Healthcheck`
+  - homepage load
+  - title and shell validation
+  - core category card visibility
+  - entry navigation into the `Elements` section
+- `Elements`
+  - `Text Box`
+    - successful submit
+    - invalid email negative path
+  - `Buttons`
+    - dedicated coverage for double click, right click, and dynamic click
+  - `Check Box`
+    - full `Home` selection summary
+    - `Downloads` branch selection outcome
+  - `Radio Button`
+    - switching between `Yes` and `Impressive`
+    - disabled `No` option validation
+  - `Links`
+    - both `Home` links in new tabs
+    - API-style response links
 - `Practice Form`
   - fill and submit the student registration form
   - validate submitted values in the result modal
+  - required-field negative path
+  - invalid mobile negative path
 - `Web Tables`
   - create a new record
   - search for a created record
   - edit an existing record
   - delete a record and verify the empty filtered state
+  - validate required fields in the registration modal
 - `Alerts`
   - standard alert
   - delayed alert
   - confirm dialog
   - prompt dialog
-- `Droppable`
-  - drag the source element into the drop zone
+- `Widgets`
+  - `Tabs`
+  - `Select Menu`
+  - `Tool Tips`
+  - `Progress Bar`
+  - `Accordian`
+  - `Date Picker`
+  - `Auto Complete`
+  - `Slider`
+  - `Menu`
+- `Interactions`
+  - `Droppable`
+  - `Dragabble`
+  - `Resizable`
+  - `Selectable`
 
 ## Project structure
 
@@ -121,6 +169,7 @@ Because of that:
 - modal assertions use actual rendered DOM instead of semantic assumptions
 - alert coverage uses controlled dialog mocking to make behavior deterministic in automation
 - drag and drop uses a stabilization fallback after a real drag attempt because the DemoQA widget can be flaky in automated browser runs
+- some widget regressions use small DOM fallbacks after a real user-like attempt when DemoQA itself becomes unreliable in headless mode
 
 ## CI
 

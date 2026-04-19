@@ -25,36 +25,32 @@
 
 ### 2. Core navigation coverage
 
-- validate navigation from the homepage into the main DemoQA sections
-- verify left-side navigation rendering after section entry
-- cover direct deep links for critical pages such as Forms, Web Tables, Alerts, and Droppable
-- confirm that section headings and active navigation states are correct
+- keep homepage and section-entry navigation covered through `healthcheck` and `smoke`
+- preserve left-side navigation validation after section entry
+- extend direct deep-link coverage where additional regression value appears
+- confirm section headings and active navigation states for newly added areas
 
 ### 3. Expanded widget and interaction coverage
 
 - `Elements`
-  - Text Box
-  - Buttons
-  - Check Box
-  - Radio Button
-  - Links
+  - extend `Web Tables` edge cases if needed
+  - deepen `Check Box` only if the tree widget remains worth the maintenance cost
+  - consider deeper `Links` API-response coverage if practical
 - `Widgets`
-  - Accordian
-  - Tabs
-  - Tool Tips
-  - Progress Bar
-  - Select Menu
+  - expand `Select Menu`, `Date Picker`, and `Auto Complete` only if additional edge cases justify it
+  - consider whether `Slider` and `Menu` need anything beyond the current stable coverage
 - `Interactions`
-  - Selectable
   - Sortable
-  - Resizable
+  - deepen `Sortable`
+  - consider additional edge cases for `Droppable` and `Dragabble` only if they remain stable
 
 ### 4. Contract-like UI checks
 
-- verify that critical pages load without broken shell rendering
-- add guardrails for missing headings, missing primary controls, or obviously broken page states
-- add optional console-error checks for critical failures
-- add lightweight assertions for important layout anchors before deeper scenario execution
+- keep the baseline contract-like guard layer stable and low-noise
+- preserve shell rendering checks for homepage, section landing pages, and critical content pages
+- extend guardrails only where additional regression value justifies the maintenance cost
+- keep console/page error checks focused on critical failures and continue filtering known DemoQA-specific noise
+- add more layout-anchor assertions only when they meaningfully protect deeper scenario execution
 
 ### 5. CI and image maturity
 

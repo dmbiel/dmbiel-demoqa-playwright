@@ -1,19 +1,50 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class MenuPage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/menu');
-    await expect(
-      this.page.getByRole('heading', { name: 'Menu' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Menu',
+      primaryControls: [this.page.getByText('Main Item 1', { exact: true })],
+    });
   }
 
   async hoverMainItem2(): Promise<void> {
     await this.page.getByText('Main Item 2', { exact: true }).hover();
+  }
+
+  async expectMainItemsVisible(): Promise<void> {
+    await expect(
+      this.page.getByText('Main Item 1', { exact: true }),
+    ).toBeVisible();
+    await expect(
+      this.page.getByText('Main Item 2', { exact: true }),
+    ).toBeVisible();
+    await expect(
+      this.page.getByText('Main Item 3', { exact: true }),
+    ).toBeVisible();
+  }
+
+  async expectSubMenuHidden(): Promise<void> {
+    await expect(
+      this.page.getByText('SUB SUB LIST »', { exact: true }),
+    ).not.toBeVisible();
+  }
+
+  async expectNestedItemsHidden(): Promise<void> {
+    await expect(
+      this.page.getByText('Sub Sub Item 1', { exact: true }),
+    ).not.toBeVisible();
+    await expect(
+      this.page.getByText('Sub Sub Item 2', { exact: true }),
+    ).not.toBeVisible();
   }
 
   async expectSubMenuVisible(): Promise<void> {

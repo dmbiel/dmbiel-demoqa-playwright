@@ -12,4 +12,32 @@ test.describe('Practice Form', () => {
     await practiceFormPage.submit();
     await practiceFormPage.expectSuccessfulSubmission(practiceFormSubmission);
   });
+
+  test('does not submit an empty form with required fields missing', async ({
+    page,
+  }) => {
+    const practiceFormPage = new PracticeFormPage(page);
+
+    await practiceFormPage.goto();
+    await practiceFormPage.submit();
+    await practiceFormPage.expectSubmissionModalHidden();
+    await practiceFormPage.expectRequiredFieldErrors();
+  });
+
+  test('does not submit when mobile number format is invalid', async ({
+    page,
+  }) => {
+    const practiceFormPage = new PracticeFormPage(page);
+
+    await practiceFormPage.goto();
+    await practiceFormPage.fillRequiredFieldsOnly({
+      firstName: practiceFormSubmission.firstName,
+      lastName: practiceFormSubmission.lastName,
+      gender: practiceFormSubmission.gender,
+      mobile: '12345',
+    });
+    await practiceFormPage.submit();
+    await practiceFormPage.expectSubmissionModalHidden();
+    await practiceFormPage.expectInvalidMobileValidationMessage();
+  });
 });

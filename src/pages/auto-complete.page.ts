@@ -1,6 +1,9 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class AutoCompletePage {
   constructor(private readonly page: Page) {}
@@ -20,11 +23,24 @@ export class AutoCompletePage {
       .getByText(color, { exact: true });
   }
 
+  private multipleValueLabel(color: string): Locator {
+    return this.page
+      .locator('#autoCompleteMultipleContainer')
+      .getByText(color, {
+        exact: true,
+      });
+  }
+
+  private removeMultipleValueButton(color: string): Locator {
+    return this.page.getByRole('button', { name: `Remove ${color}` });
+  }
+
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/auto-complete');
-    await expect(
-      this.page.getByRole('heading', { name: 'Auto Complete' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Auto Complete',
+      primaryControls: [this.page.locator('#autoCompleteMultipleInput')],
+    });
   }
 
   async selectMultipleColors(colors: string[]): Promise<void> {
@@ -51,5 +67,13 @@ export class AutoCompletePage {
         '#autoCompleteSingleContainer .auto-complete__single-value',
       ),
     ).toHaveText(color);
+  }
+
+  async removeMultipleColor(color: string): Promise<void> {
+    await this.removeMultipleValueButton(color).click();
+  }
+
+  async expectMultipleColorRemoved(color: string): Promise<void> {
+    await expect(this.multipleValueLabel(color)).not.toBeVisible();
   }
 }

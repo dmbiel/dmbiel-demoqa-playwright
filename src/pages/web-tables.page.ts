@@ -1,16 +1,20 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { WebTableRecord } from '../data/web-table.data';
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class WebTablesPage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/webtables');
-    await expect(
-      this.page.getByRole('heading', { name: 'Web Tables' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Web Tables',
+      primaryControls: [this.page.locator('#addNewRecordButton')],
+    });
   }
 
   async openRegistrationForm(): Promise<void> {
@@ -45,6 +49,10 @@ export class WebTablesPage {
     await this.page.getByPlaceholder('Type to search').fill(value);
   }
 
+  async clearSearch(): Promise<void> {
+    await this.page.getByPlaceholder('Type to search').clear();
+  }
+
   async expectRowToContain(record: WebTableRecord): Promise<void> {
     const row = this.getRowByEmail(record.email);
 
@@ -59,6 +67,52 @@ export class WebTablesPage {
   async expectNoRowsFound(): Promise<void> {
     await expect(this.page.locator('.rt-tbody .rt-tr-group')).toHaveCount(0);
     await expect(this.page.getByText(/1 of 0/)).toBeVisible();
+  }
+
+  async clearSearchWithKeyboard(): Promise<void> {
+    const searchInput = this.page.getByPlaceholder('Type to search');
+
+    await searchInput.click();
+    await searchInput.press('ControlOrMeta+a');
+    await searchInput.press('Backspace');
+  }
+
+  async submitEmptyRegistrationForm(): Promise<void> {
+    await this.openRegistrationForm();
+    await this.submitRegistrationForm();
+  }
+
+  async expectRegistrationFormStillOpen(): Promise<void> {
+    await expect(this.page.locator('.modal-title')).toHaveText(
+      'Registration Form',
+    );
+  }
+
+  async expectRequiredFieldValidationErrors(): Promise<void> {
+    await expect(this.page.locator('#firstName')).toHaveJSProperty(
+      'validationMessage',
+      'Please fill out this field.',
+    );
+    await expect(this.page.locator('#lastName')).toHaveJSProperty(
+      'validationMessage',
+      'Please fill out this field.',
+    );
+    await expect(this.page.locator('#userEmail')).toHaveJSProperty(
+      'validationMessage',
+      'Please fill out this field.',
+    );
+    await expect(this.page.locator('#age')).toHaveJSProperty(
+      'validationMessage',
+      'Please fill out this field.',
+    );
+    await expect(this.page.locator('#salary')).toHaveJSProperty(
+      'validationMessage',
+      'Please fill out this field.',
+    );
+    await expect(this.page.locator('#department')).toHaveJSProperty(
+      'validationMessage',
+      'Please fill out this field.',
+    );
   }
 
   private getRowByEmail(email: string): Locator {

@@ -7,12 +7,16 @@ import {
 import { WebTablesPage } from '../../../src/pages/web-tables.page';
 
 test.describe('Web Tables', () => {
-  test('creates and finds a new record', async ({ page }) => {
+  test('creates, finds, and clears search for a new record', async ({
+    page,
+  }) => {
     const webTablesPage = new WebTablesPage(page);
 
     await webTablesPage.goto();
     await webTablesPage.createRecord(webTableRecord);
     await webTablesPage.search(webTableRecord.email);
+    await webTablesPage.expectRowToContain(webTableRecord);
+    await webTablesPage.clearSearchWithKeyboard();
     await webTablesPage.expectRowToContain(webTableRecord);
   });
 
@@ -30,5 +34,16 @@ test.describe('Web Tables', () => {
 
     await webTablesPage.deleteRecord(updatedWebTableRecord.email);
     await webTablesPage.expectNoRowsFound();
+  });
+
+  test('keeps the registration form open when required fields are empty', async ({
+    page,
+  }) => {
+    const webTablesPage = new WebTablesPage(page);
+
+    await webTablesPage.goto();
+    await webTablesPage.submitEmptyRegistrationForm();
+    await webTablesPage.expectRegistrationFormStillOpen();
+    await webTablesPage.expectRequiredFieldValidationErrors();
   });
 });

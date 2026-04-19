@@ -1,15 +1,19 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class RadioButtonPage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/radio-button');
-    await expect(
-      this.page.getByRole('heading', { name: 'Radio Button' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Radio Button',
+      primaryControls: [this.page.locator('label[for="yesRadio"]')],
+    });
   }
 
   async selectYes(): Promise<void> {
@@ -28,5 +32,21 @@ export class RadioButtonPage {
 
   async expectNoOptionDisabled(): Promise<void> {
     await expect(this.page.locator('#noRadio')).toBeDisabled();
+  }
+
+  async expectYesChecked(): Promise<void> {
+    await expect(this.page.locator('#yesRadio')).toBeChecked();
+  }
+
+  async expectImpressiveChecked(): Promise<void> {
+    await expect(this.page.locator('#impressiveRadio')).toBeChecked();
+  }
+
+  async expectYesNotChecked(): Promise<void> {
+    await expect(this.page.locator('#yesRadio')).not.toBeChecked();
+  }
+
+  async expectNoSelectionResult(): Promise<void> {
+    await expect(this.page.locator('.text-success')).not.toBeVisible();
   }
 }

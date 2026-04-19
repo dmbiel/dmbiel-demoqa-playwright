@@ -1,6 +1,9 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 type DialogBucket = 'alerts' | 'confirms' | 'prompts';
 
@@ -9,9 +12,10 @@ export class AlertsPage {
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/alerts');
-    await expect(
-      this.page.getByRole('heading', { name: 'Alerts' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Alerts',
+      primaryControls: [this.page.locator('#alertButton')],
+    });
     await this.installDialogMocks();
   }
 

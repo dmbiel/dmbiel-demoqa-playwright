@@ -5,7 +5,10 @@ import type {
   Hobby,
   PracticeFormData,
 } from '../data/practice-form.data';
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 const genderInputIds: Record<Gender, string> = {
   Male: 'gender-radio-1',
@@ -36,9 +39,10 @@ export class PracticeFormPage {
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/automation-practice-form');
-    await expect(
-      this.page.getByRole('heading', { name: 'Practice Form' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Practice Form',
+      primaryControls: [this.page.locator('#firstName')],
+    });
   }
 
   async fillForm(form: PracticeFormData): Promise<void> {
@@ -73,6 +77,20 @@ export class PracticeFormPage {
     await this.page.locator('#submit').click();
   }
 
+  async fillRequiredFieldsOnly(
+    form: Pick<
+      PracticeFormData,
+      'firstName' | 'lastName' | 'gender' | 'mobile'
+    >,
+  ): Promise<void> {
+    await this.page.getByPlaceholder('First Name').fill(form.firstName);
+    await this.page.getByPlaceholder('Last Name').fill(form.lastName);
+    await this.page
+      .locator(`label[for="${genderInputIds[form.gender]}"]`)
+      .click();
+    await this.page.locator('#userNumber').fill(form.mobile);
+  }
+
   async expectSuccessfulSubmission(form: PracticeFormData): Promise<void> {
     const modal = this.page.locator('.modal-content');
 
@@ -100,6 +118,46 @@ export class PracticeFormPage {
       'State and City',
       `${form.state} ${form.city}`,
     );
+  }
+
+  async expectSubmissionModalHidden(): Promise<void> {
+    await expect(this.page.locator('.modal-content')).not.toBeVisible();
+  }
+
+  async expectRequiredFieldErrors(): Promise<void> {
+    await expect(this.page.getByPlaceholder('First Name')).toHaveJSProperty(
+      'validationMessage',
+      'Please fill out this field.',
+    );
+    await expect(this.page.getByPlaceholder('Last Name')).toHaveJSProperty(
+      'validationMessage',
+      'Please fill out this field.',
+    );
+    await expect(this.page.locator('#userNumber')).toHaveJSProperty(
+      'validationMessage',
+      'Please fill out this field.',
+    );
+    await expect(this.page.locator('#genterWrapper')).toContainText('Gender');
+  }
+
+  async expectInvalidMobileValidationMessage(): Promise<void> {
+    await expect
+      .poll(async () => {
+        return this.page.evaluate(() => {
+          const input = document.querySelector<HTMLInputElement>('#userNumber');
+          return input?.checkValidity() ?? true;
+        });
+      })
+      .toBe(false);
+
+    await expect
+      .poll(async () => {
+        return this.page.evaluate(() => {
+          const input = document.querySelector<HTMLInputElement>('#userNumber');
+          return input?.validationMessage ?? '';
+        });
+      })
+      .toContain('10 characters');
   }
 
   private async setDateOfBirth(dateOfBirth: PracticeFormData['dateOfBirth']) {

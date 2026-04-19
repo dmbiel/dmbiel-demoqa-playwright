@@ -1,6 +1,9 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export interface TextBoxFormData {
   fullName: string;
@@ -14,9 +17,10 @@ export class TextBoxPage {
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/text-box');
-    await expect(
-      this.page.getByRole('heading', { name: 'Text Box' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Text Box',
+      primaryControls: [this.page.locator('#userName')],
+    });
   }
 
   async fillAndSubmit(data: TextBoxFormData): Promise<void> {

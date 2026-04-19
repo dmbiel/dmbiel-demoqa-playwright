@@ -1,6 +1,9 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class ProgressBarPage {
   constructor(private readonly page: Page) {}
@@ -11,9 +14,10 @@ export class ProgressBarPage {
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/progress-bar');
-    await expect(
-      this.page.getByRole('heading', { name: 'Progress Bar' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Progress Bar',
+      primaryControls: [this.page.locator('#startStopButton')],
+    });
     await this.ensureInitialState();
   }
 
@@ -57,8 +61,9 @@ export class ProgressBarPage {
       .toBe(true)
       .catch(async () => {
         await this.page.evaluate(() => {
-          const progressBar =
-            document.querySelector<HTMLElement>('[role="progressbar"]');
+          const progressBar = document.querySelector<HTMLElement>(
+            '[role="progressbar"]',
+          );
           const resetButton = Array.from(
             document.querySelectorAll<HTMLButtonElement>('button'),
           ).find((button) => {

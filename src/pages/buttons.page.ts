@@ -1,15 +1,19 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class ButtonsPage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/buttons');
-    await expect(
-      this.page.getByRole('heading', { name: 'Buttons' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Buttons',
+      primaryControls: [this.page.locator('#doubleClickBtn')],
+    });
   }
 
   async performDoubleClick(): Promise<void> {

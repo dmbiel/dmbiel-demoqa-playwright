@@ -1,15 +1,19 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class RadioButtonPage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/radio-button');
-    await expect(
-      this.page.getByRole('heading', { name: 'Radio Button' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Radio Button',
+      primaryControls: [this.page.locator('label[for="yesRadio"]')],
+    });
   }
 
   async selectYes(): Promise<void> {

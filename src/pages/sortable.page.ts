@@ -1,16 +1,19 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class SortablePage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/sortable');
-    await expect(
-      this.page.getByRole('heading', { name: 'Sortable' }),
-    ).toBeVisible();
-    await expect(this.page.getByRole('tab', { name: 'List' })).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Sortable',
+      primaryControls: [this.page.getByRole('tab', { name: 'List' })],
+    });
   }
 
   async getListOrder(): Promise<string[]> {

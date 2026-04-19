@@ -1,6 +1,9 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class SelectMenuPage {
   constructor(private readonly page: Page) {}
@@ -37,9 +40,10 @@ export class SelectMenuPage {
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/select-menu');
-    await expect(
-      this.page.getByRole('heading', { name: 'Select Menu' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Select Menu',
+      primaryControls: [this.page.locator('#withOptGroup')],
+    });
   }
 
   async selectValue(optionText: string): Promise<void> {
@@ -92,7 +96,9 @@ export class SelectMenuPage {
       .first();
 
     for (const color of colors) {
-      await expect(multiselectBlock.getByText(color, { exact: true })).toBeVisible();
+      await expect(
+        multiselectBlock.getByText(color, { exact: true }),
+      ).toBeVisible();
     }
   }
 

@@ -1,16 +1,20 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { WebTableRecord } from '../data/web-table.data';
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class WebTablesPage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/webtables');
-    await expect(
-      this.page.getByRole('heading', { name: 'Web Tables' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Web Tables',
+      primaryControls: [this.page.locator('#addNewRecordButton')],
+    });
   }
 
   async openRegistrationForm(): Promise<void> {

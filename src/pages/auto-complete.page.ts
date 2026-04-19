@@ -1,6 +1,9 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class AutoCompletePage {
   constructor(private readonly page: Page) {}
@@ -34,9 +37,10 @@ export class AutoCompletePage {
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/auto-complete');
-    await expect(
-      this.page.getByRole('heading', { name: 'Auto Complete' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Auto Complete',
+      primaryControls: [this.page.locator('#autoCompleteMultipleInput')],
+    });
   }
 
   async selectMultipleColors(colors: string[]): Promise<void> {

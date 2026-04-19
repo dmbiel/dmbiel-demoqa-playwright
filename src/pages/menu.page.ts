@@ -1,15 +1,19 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class MenuPage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/menu');
-    await expect(
-      this.page.getByRole('heading', { name: 'Menu' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Menu',
+      primaryControls: [this.page.locator('#nav')],
+    });
   }
 
   async hoverMainItem2(): Promise<void> {

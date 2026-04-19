@@ -1,15 +1,19 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class DatePickerPage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/date-picker');
-    await expect(
-      this.page.getByRole('heading', { name: 'Date Picker' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Date Picker',
+      primaryControls: [this.page.locator('#datePickerMonthYearInput')],
+    });
   }
 
   async setDate(dateValue: string): Promise<void> {

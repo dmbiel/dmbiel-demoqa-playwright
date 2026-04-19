@@ -1,15 +1,19 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class SliderPage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/slider');
-    await expect(
-      this.page.getByRole('heading', { name: 'Slider' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Slider',
+      primaryControls: [this.page.locator('input[type="range"]')],
+    });
   }
 
   async moveSliderTo(value: string): Promise<void> {

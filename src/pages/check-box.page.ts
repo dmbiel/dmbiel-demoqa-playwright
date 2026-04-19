@@ -1,15 +1,19 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class CheckBoxPage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/checkbox');
-    await expect(
-      this.page.getByRole('heading', { name: 'Check Box' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Check Box',
+      primaryControls: [this.page.getByText('Home', { exact: true })],
+    });
   }
 
   async selectHome(): Promise<void> {
@@ -57,7 +61,9 @@ export class CheckBoxPage {
   }
 
   async selectDownloads(): Promise<void> {
-    const checkbox = this.page.getByRole('checkbox', { name: 'Select Downloads' });
+    const checkbox = this.page.getByRole('checkbox', {
+      name: 'Select Downloads',
+    });
 
     if (await checkbox.isVisible().catch(() => false)) {
       await checkbox.check();
@@ -65,7 +71,9 @@ export class CheckBoxPage {
     }
 
     await this.page.evaluate(() => {
-      const checkbox = document.querySelector<HTMLInputElement>('#tree-node-downloads');
+      const checkbox = document.querySelector<HTMLInputElement>(
+        '#tree-node-downloads',
+      );
 
       if (checkbox) {
         checkbox.checked = true;

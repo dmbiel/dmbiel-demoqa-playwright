@@ -1,16 +1,19 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class SelectablePage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/selectable');
-    await expect(
-      this.page.getByRole('heading', { name: 'Selectable' }),
-    ).toBeVisible();
-    await expect(this.page.getByRole('tab', { name: 'List' })).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Selectable',
+      primaryControls: [this.page.getByRole('tab', { name: 'List' })],
+    });
   }
 
   async selectListItem(name: string): Promise<void> {

@@ -1,15 +1,19 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class AccordianPage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/accordian');
-    await expect(
-      this.page.getByRole('heading', { name: 'Accordian' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Accordian',
+      primaryControls: [this.page.locator('#section1Heading')],
+    });
   }
 
   async expectFirstSectionVisible(): Promise<void> {

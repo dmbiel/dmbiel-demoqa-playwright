@@ -1,16 +1,19 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class ResizablePage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/resizable');
-    await expect(
-      this.page.getByRole('heading', { name: 'Resizable' }),
-    ).toBeVisible();
-    await expect(this.page.locator('#resizable')).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Resizable',
+      primaryControls: [this.page.locator('#resizable')],
+    });
   }
 
   async getFreeBoxSize(): Promise<{ width: number; height: number }> {

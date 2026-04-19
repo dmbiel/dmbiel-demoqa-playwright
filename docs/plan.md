@@ -55,6 +55,10 @@
     - Dragabble
     - Resizable
     - Selectable
+- baseline contract-like UI guardrails are implemented for critical DemoQA pages and section landing pages:
+  - shell rendering checks for homepage, section entries, and content pages
+  - guardrails for missing headings, missing primary controls, and obviously broken page states
+  - lightweight console/page error checks with filtering for known DemoQA noise
 - GitHub Actions runs formatting, linting, type checking, and Playwright tests
 
 ## Coverage expansion roadmap
@@ -89,10 +93,11 @@
 
 ### 4. Contract-like UI checks
 
-- verify that critical pages load without broken shell rendering
-- add guardrails for missing headings, missing primary controls, or obviously broken page states
-- add optional console-error checks for critical failures
-- add lightweight assertions for important layout anchors before deeper scenario execution
+- keep the baseline contract-like guard layer stable and low-noise
+- preserve shell rendering checks for homepage, section landing pages, and critical content pages
+- extend guardrails only where additional regression value justifies the maintenance cost
+- keep console/page error checks focused on critical failures and continue filtering known DemoQA-specific noise
+- add more layout-anchor assertions only when they meaningfully protect deeper scenario execution
 
 ## Proposed execution layers
 

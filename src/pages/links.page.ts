@@ -1,15 +1,19 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class LinksPage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/links');
-    await expect(
-      this.page.getByRole('heading', { name: 'Links', exact: true }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Links',
+      primaryControls: [this.page.locator('#simpleLink')],
+    });
   }
 
   async openHomeLinkInNewTab(): Promise<Page> {

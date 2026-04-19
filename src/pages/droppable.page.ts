@@ -1,15 +1,19 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class DroppablePage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/droppable');
-    await expect(
-      this.page.getByRole('heading', { name: 'Droppable' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Droppable',
+      primaryControls: [this.page.locator('#droppable').first()],
+    });
   }
 
   async dragToDropZone(): Promise<void> {
@@ -208,7 +212,10 @@ export class DroppablePage {
     const droppedLabels = panel.getByText('Dropped!', { exact: true });
     const outerLabels = panel.getByText('Outer droppable', { exact: true });
 
-    if ((await droppedLabels.count()) === 1 && (await outerLabels.count()) >= 1) {
+    if (
+      (await droppedLabels.count()) === 1 &&
+      (await outerLabels.count()) >= 1
+    ) {
       return;
     }
 
@@ -358,7 +365,9 @@ export class DroppablePage {
       .not.toEqual(initialPosition);
   }
 
-  private async getPosition(locator: Locator): Promise<{ x: number; y: number }> {
+  private async getPosition(
+    locator: Locator,
+  ): Promise<{ x: number; y: number }> {
     const box = await locator.boundingBox();
 
     if (!box) {

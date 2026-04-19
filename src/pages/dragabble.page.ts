@@ -1,16 +1,19 @@
 import { expect, type Page } from '@playwright/test';
 
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 export class DragabblePage {
   constructor(private readonly page: Page) {}
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/dragabble');
-    await expect(
-      this.page.getByRole('heading', { name: 'Dragabble' }),
-    ).toBeVisible();
-    await expect(this.page.locator('#dragBox')).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Dragabble',
+      primaryControls: [this.page.locator('#dragBox')],
+    });
   }
 
   async getDragBoxPosition(): Promise<{ x: number; y: number }> {

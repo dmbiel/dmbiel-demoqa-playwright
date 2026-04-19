@@ -5,7 +5,10 @@ import type {
   Hobby,
   PracticeFormData,
 } from '../data/practice-form.data';
-import { openDemoQaPage } from '../utils/demoqa-ui';
+import {
+  expectDemoQaContentPageReady,
+  openDemoQaPage,
+} from '../utils/demoqa-ui';
 
 const genderInputIds: Record<Gender, string> = {
   Male: 'gender-radio-1',
@@ -36,9 +39,10 @@ export class PracticeFormPage {
 
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/automation-practice-form');
-    await expect(
-      this.page.getByRole('heading', { name: 'Practice Form' }),
-    ).toBeVisible();
+    await expectDemoQaContentPageReady(this.page, {
+      heading: 'Practice Form',
+      primaryControls: [this.page.locator('#firstName')],
+    });
   }
 
   async fillForm(form: PracticeFormData): Promise<void> {

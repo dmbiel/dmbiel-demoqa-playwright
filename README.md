@@ -48,7 +48,7 @@ npm test -- --project regression
 
 Run only the smoke project:
 
-```bash
+````bash
 npm test -- --project smoke
 Run quality checks locally:
 
@@ -56,7 +56,7 @@ Run quality checks locally:
 npm run format:check
 npm run lint
 npm run typecheck
-```
+````
 
 ## Available scripts
 

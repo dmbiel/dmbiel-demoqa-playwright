@@ -8,6 +8,14 @@ import {
 export class DroppablePage {
   constructor(private readonly page: Page) {}
 
+  private acceptTabPanel(): Locator {
+    return this.page.locator('#acceptDropContainer');
+  }
+
+  private acceptDropZone(): Locator {
+    return this.acceptTabPanel().locator('.drop-box').first();
+  }
+
   async goto(): Promise<void> {
     await openDemoQaPage(this.page, '/droppable');
     await expectDemoQaContentPageReady(this.page, {
@@ -57,15 +65,13 @@ export class DroppablePage {
 
   async openAcceptTab(): Promise<void> {
     await this.page.getByRole('tab', { name: 'Accept' }).click();
-    await expect(
-      this.page.getByRole('tabpanel', { name: 'Accept' }),
-    ).toBeVisible();
+    await expect(this.acceptTabPanel()).toBeVisible();
   }
 
   async dragAcceptableToDropZone(): Promise<void> {
-    const acceptPanel = this.page.getByRole('tabpanel', { name: 'Accept' });
-    const acceptable = acceptPanel.getByText('Acceptable', { exact: true });
-    const dropZone = acceptPanel.getByText('Drop here', { exact: true });
+    const acceptPanel = this.acceptTabPanel();
+    const acceptable = acceptPanel.locator('#acceptable');
+    const dropZone = this.acceptDropZone();
 
     try {
       await acceptable.dragTo(dropZone, { force: true });
@@ -102,11 +108,8 @@ export class DroppablePage {
   }
 
   async dragNotAcceptableToDropZone(): Promise<void> {
-    const acceptPanel = this.page.getByRole('tabpanel', { name: 'Accept' });
-    const notAcceptable = acceptPanel.getByText('Not Acceptable', {
-      exact: true,
-    });
-    const dropZone = acceptPanel.getByText('Drop here', { exact: true });
+    const notAcceptable = this.acceptTabPanel().locator('.drag-box').nth(1);
+    const dropZone = this.acceptDropZone();
 
     try {
       await notAcceptable.dragTo(dropZone, { force: true });
@@ -116,19 +119,11 @@ export class DroppablePage {
   }
 
   async expectAcceptableDropSucceeded(): Promise<void> {
-    await expect(
-      this.page
-        .getByRole('tabpanel', { name: 'Accept' })
-        .getByText('Dropped!', { exact: true }),
-    ).toBeVisible();
+    await expect(this.acceptDropZone()).toContainText('Dropped!');
   }
 
   async expectNotAcceptableDropRejected(): Promise<void> {
-    await expect(
-      this.page
-        .getByRole('tabpanel', { name: 'Accept' })
-        .getByText('Drop here', { exact: true }),
-    ).toBeVisible();
+    await expect(this.acceptDropZone()).toContainText('Drop here');
   }
 
   async openPreventPropogationTab(): Promise<void> {

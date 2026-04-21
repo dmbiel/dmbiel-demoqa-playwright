@@ -3,79 +3,116 @@
 ## Current state
 
 - Playwright + TypeScript project structure is in place
-- ESLint and Prettier are configured and enforced in CI
-- End-to-end coverage is implemented for:
-  - Practice Form
-  - Web Tables
-  - Alerts
-  - Drag and Drop
-- Test execution is organized into `healthcheck`, `smoke`, and `regression` layers
-- `healthcheck` is wired as a Playwright project dependency for broader packages
-- GitHub Actions is split into `checks` and `e2e` jobs
-- The `e2e` job is optimized for `chromium` only and uses a dedicated Playwright browser cache
-- A separate `publish-ci-images` workflow builds preconfigured CI images for `checks` and `e2e` in `ghcr.io`
+- ESLint, Prettier, and TypeScript checks are configured and exposed through npm scripts
+- Test execution is organized into `healthcheck`, `smoke`, and `regression` Playwright projects
+- `smoke` and `regression` depend on `healthcheck`, so the base shell check stays the entry condition for broader UI coverage
+- CI is split into `checks` and `e2e` workflows, with separate Docker images prepared for both paths
+- The main browser target is `chromium`, aligned between local runs and CI
+- Page objects are in `src/pages`, shared test data is in `src/data`, and shared UI helpers live in `src/utils`
 
-## Coverage expansion roadmap
+## Current coverage
 
-### 1. Healthcheck and smoke foundation
+### Healthcheck
 
-- keep `healthcheck` fast and stable so it remains the entry condition for broader UI coverage
-- expand `smoke` with one reliable happy path per major DemoQA area
-- keep package boundaries clear so CI can later target only the needed layer
+- homepage availability
+- core shell rendering for the base application entry point
 
-### 2. Core navigation coverage
+### Smoke coverage
 
-- keep homepage and section-entry navigation covered through `healthcheck` and `smoke`
-- preserve left-side navigation validation after section entry
-- extend direct deep-link coverage where additional regression value appears
-- confirm section headings and active navigation states for newly added areas
-
-### 3. Expanded widget and interaction coverage
-
+- `Navigation`
+  - top-level and section-entry navigation checks
 - `Elements`
-  - extend `Web Tables` edge cases if needed
-  - deepen `Check Box` only if the tree widget remains worth the maintenance cost
-  - consider deeper `Links` API-response coverage if practical
+  - Text Box
+  - Check Box
+  - Radio Button
+  - Web Tables
+  - Buttons
+  - Links
 - `Widgets`
-  - expand `Select Menu`, `Date Picker`, and `Auto Complete` only if additional edge cases justify it
-  - consider whether `Slider` and `Menu` need anything beyond the current stable coverage
+  - Accordian
+  - Auto Complete
+  - Date Picker
+  - Menu
+  - Progress Bar
+  - Select Menu
+  - Slider
+  - Tabs
+  - Tool Tips
 - `Interactions`
+  - Dragabble
+  - Droppable
+  - Resizable
+  - Selectable
   - Sortable
-  - deepen `Sortable`
-  - consider additional edge cases for `Droppable` and `Dragabble` only if they remain stable
 
-### 4. Contract-like UI checks
+### Regression coverage
 
-- keep the baseline contract-like guard layer stable and low-noise
-- preserve shell rendering checks for homepage, section landing pages, and critical content pages
-- extend guardrails only where additional regression value justifies the maintenance cost
-- keep console/page error checks focused on critical failures and continue filtering known DemoQA-specific noise
-- add more layout-anchor assertions only when they meaningfully protect deeper scenario execution
+- `Forms`
+  - Practice Form
+- `Alerts, Frame & Windows`
+  - Alerts
+- `Elements`
+  - Text Box
+  - Check Box
+  - Radio Button
+  - Web Tables
+  - Buttons
+  - Links
+- `Widgets`
+  - Accordian
+  - Auto Complete
+  - Date Picker
+  - Menu
+  - Progress Bar
+  - Select Menu
+  - Slider
+  - Tabs
+  - Tool Tips
+- `Interactions`
+  - Dragabble
+  - Droppable
+  - Resizable
+  - Selectable
 
-### 5. CI and image maturity
+## Coverage gaps
 
-- complete the rollout from runner-based setup to prebuilt GHCR images for `checks` and `e2e`
-- keep Playwright image version aligned with `package-lock.json`
-- document image publishing, rollback, and cache behavior alongside the test architecture
-- consider selective workflow triggers or path filters once the suite grows
+- `Forms`
+  - no smoke-level happy path yet for Practice Form
+- `Alerts, Frame & Windows`
+  - Alerts is covered in regression, but not represented in smoke
+- `Interactions`
+  - Sortable exists in smoke, but does not yet have dedicated regression coverage
+- broader DemoQA areas such as `Frames`, `Nested Frames`, `Browser Windows`, `Modal Dialogs`, `Broken Links - Images`, `Upload and Download`, and `Dynamic Properties` are not covered yet
+- `Widgets`
+  - all currently implemented widget areas are covered in smoke and regression, but additional widget pages are still outside the suite
 
-## Proposed execution layers
+## Execution layers
 
 - `healthcheck`
   - the fastest layer
-  - verifies homepage availability and core shell rendering
-  - must pass before any broader UI package is executed
+  - verifies homepage reachability and base shell rendering
+  - must stay stable because it gates broader UI packages
 - `smoke`
-  - one high-value happy path per major DemoQA area
+  - one reliable happy path per covered page or area
+  - should remain lean enough for fast CI feedback
 - `regression`
-  - broader scenario coverage for forms, widgets, interactions, and edge cases
+  - deeper scenario coverage and richer assertions for already adopted pages
+  - can grow more slowly as long as maintenance cost stays justified
 
-## Short-term next steps
+## Near-term priorities
 
-- complete the GHCR image rollout after the publish workflow is available on `main`
-- add a `navigation` package after the healthcheck layer is stable
-- expand smoke coverage for `Text Box` and `Buttons`
-- keep docs synchronized with the current setup, CI layers, and container strategy
+- add smoke coverage for `Practice Form` so forms are represented in the fast validation layer
+- add smoke coverage for `Alerts` to reduce the gap between smoke and regression packages
+- add regression coverage for `Sortable` to align interactions coverage across layers
+- decide which uncovered DemoQA pages are worth adding next based on regression value and maintenance cost
+- keep `README.md`, `docs/ci-pipelines.md`, and this document synchronized when CI image rollout changes
+
+## CI and container direction
+
+- keep the rollout from runner-managed setup to reusable GHCR images explicit and documented
+- keep the Playwright image version aligned with `package-lock.json`
+- preserve the split between `checks` and `e2e` responsibilities so failures stay easy to diagnose
+- update docs when the main validation workflow switches from install-on-run to container-backed execution
 
 ## Maintenance rules
 
@@ -84,4 +121,4 @@
 - keep shared DemoQA-specific helpers in `src/utils`
 - use Playwright project dependencies when a package must act as a precondition for another package
 - run `npm run format`, `npm run lint`, `npm run typecheck`, and `npm test` before commits when practical
-- keep CI image changes in sync with `package.json`, `package-lock.json`, and the workflow rollout plan
+- keep CI image changes in sync with `package.json`, `package-lock.json`, and workflow configuration

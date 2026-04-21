@@ -28,6 +28,7 @@
   - Web Tables
   - Buttons
   - Links
+  - Dynamic Properties
 - `Widgets`
   - Accordian
   - Auto Complete
@@ -58,6 +59,7 @@
   - Web Tables
   - Buttons
   - Links
+  - Dynamic Properties
 - `Widgets`
   - Accordian
   - Auto Complete
@@ -82,7 +84,7 @@
   - Alerts is covered in regression, but not represented in smoke
 - `Interactions`
   - Sortable exists in smoke, but does not yet have dedicated regression coverage
-- broader DemoQA areas such as `Frames`, `Nested Frames`, `Browser Windows`, `Modal Dialogs`, `Broken Links - Images`, `Upload and Download`, and `Dynamic Properties` are not covered yet
+- broader DemoQA areas such as `Frames`, `Nested Frames`, `Browser Windows`, `Modal Dialogs`, `Broken Links - Images`, and `Upload and Download` are not covered yet
 - `Widgets`
   - all currently implemented widget areas are covered in smoke and regression, but additional widget pages are still outside the suite
 

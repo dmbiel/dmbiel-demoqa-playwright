@@ -21,6 +21,10 @@
 
 - `Navigation`
   - top-level and section-entry navigation checks
+- `Forms`
+  - Practice Form
+- `Alerts, Frame & Windows`
+  - Alerts
 - `Elements`
   - Text Box
   - Check Box
@@ -78,10 +82,6 @@
 
 ## Coverage gaps
 
-- `Forms`
-  - no smoke-level happy path yet for Practice Form
-- `Alerts, Frame & Windows`
-  - Alerts is covered in regression, but not represented in smoke
 - `Interactions`
   - Sortable exists in smoke, but does not yet have dedicated regression coverage
 - broader DemoQA areas such as `Frames`, `Nested Frames`, `Browser Windows`, `Modal Dialogs`, `Broken Links - Images`, and `Upload and Download` are not covered yet
@@ -103,8 +103,6 @@
 
 ## Near-term priorities
 
-- add smoke coverage for `Practice Form` so forms are represented in the fast validation layer
-- add smoke coverage for `Alerts` to reduce the gap between smoke and regression packages
 - add regression coverage for `Sortable` to align interactions coverage across layers
 - decide which uncovered DemoQA pages are worth adding next based on regression value and maintenance cost
 - keep `README.md`, `docs/ci-pipelines.md`, and this document synchronized when CI image rollout changes

@@ -26,6 +26,7 @@
   - Practice Form
 - `Alerts, Frame & Windows`
   - Alerts
+  - Browser Windows
 - `Elements`
   - Text Box
   - Check Box
@@ -84,12 +85,11 @@
   - Droppable
   - Resizable
   - Selectable
+  - Sortable
 
 ## Coverage gaps
 
-- `Interactions`
-  - Sortable exists in smoke, but does not yet have dedicated regression coverage
-- broader DemoQA areas such as `Frames`, `Nested Frames`, `Browser Windows`, and `Modal Dialogs` are not covered yet
+- broader DemoQA areas such as `Frames`, `Nested Frames`, `Modal Dialogs`, `Broken Links - Images`, and `Upload and Download` are not covered yet
 - `Widgets`
   - all currently implemented widget areas are covered in smoke and regression, but additional widget pages are still outside the suite
 
@@ -108,8 +108,7 @@
 
 ## Near-term priorities
 
-- add regression coverage for `Sortable` to align interactions coverage across layers
-- decide whether `Browser Windows` or `Modal Dialogs` is the next highest-value uncovered DemoQA target
+- decide which uncovered DemoQA pages are worth adding next based on regression value and maintenance cost
 - keep `README.md`, `docs/ci-pipelines.md`, and this document synchronized when CI image rollout changes
 
 ## CI and container direction

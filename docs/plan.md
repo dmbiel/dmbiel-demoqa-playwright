@@ -6,6 +6,7 @@
 - ESLint, Prettier, and TypeScript checks are configured and exposed through npm scripts
 - Test execution is organized into `healthcheck`, `smoke`, and `regression` Playwright projects
 - `smoke` and `regression` depend on `healthcheck`, so the base shell check stays the entry condition for broader UI coverage
+- baseline contract-like UI guardrails are implemented for homepage, section landing pages, and covered content pages
 - CI is split into `checks` and `e2e` workflows, with separate Docker images prepared for both paths
 - The main browser target is `chromium`, aligned between local runs and CI
 - Page objects are in `src/pages`, shared test data is in `src/data`, and shared UI helpers live in `src/utils`
@@ -28,7 +29,9 @@
   - Web Tables
   - Buttons
   - Links
+  - Broken Links - Images
   - Dynamic Properties
+  - Upload and Download
 - `Widgets`
   - Accordian
   - Auto Complete
@@ -59,7 +62,9 @@
   - Web Tables
   - Buttons
   - Links
+  - Broken Links - Images
   - Dynamic Properties
+  - Upload and Download
 - `Widgets`
   - Accordian
   - Auto Complete
@@ -84,7 +89,7 @@
   - Alerts is covered in regression, but not represented in smoke
 - `Interactions`
   - Sortable exists in smoke, but does not yet have dedicated regression coverage
-- broader DemoQA areas such as `Frames`, `Nested Frames`, `Browser Windows`, `Modal Dialogs`, `Broken Links - Images`, and `Upload and Download` are not covered yet
+- broader DemoQA areas such as `Frames`, `Nested Frames`, `Browser Windows`, and `Modal Dialogs` are not covered yet
 - `Widgets`
   - all currently implemented widget areas are covered in smoke and regression, but additional widget pages are still outside the suite
 
@@ -106,7 +111,7 @@
 - add smoke coverage for `Practice Form` so forms are represented in the fast validation layer
 - add smoke coverage for `Alerts` to reduce the gap between smoke and regression packages
 - add regression coverage for `Sortable` to align interactions coverage across layers
-- decide which uncovered DemoQA pages are worth adding next based on regression value and maintenance cost
+- decide whether `Browser Windows` or `Modal Dialogs` is the next highest-value uncovered DemoQA target
 - keep `README.md`, `docs/ci-pipelines.md`, and this document synchronized when CI image rollout changes
 
 ## CI and container direction

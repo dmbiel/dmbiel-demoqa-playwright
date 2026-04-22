@@ -6,6 +6,7 @@
 - ESLint, Prettier, and TypeScript checks are configured and exposed through npm scripts
 - Test execution is organized into `healthcheck`, `smoke`, and `regression` Playwright projects
 - `smoke` and `regression` depend on `healthcheck`, so the base shell check stays the entry condition for broader UI coverage
+- baseline contract-like UI guardrails are implemented for homepage, section landing pages, and covered content pages
 - CI is split into `checks` and `e2e` workflows, with separate Docker images prepared for both paths
 - The main browser target is `chromium`, aligned between local runs and CI
 - Page objects are in `src/pages`, shared test data is in `src/data`, and shared UI helpers live in `src/utils`
@@ -33,7 +34,9 @@
   - Web Tables
   - Buttons
   - Links
+  - Broken Links - Images
   - Dynamic Properties
+  - Upload and Download
 - `Widgets`
   - Accordian
   - Auto Complete
@@ -64,7 +67,9 @@
   - Web Tables
   - Buttons
   - Links
+  - Broken Links - Images
   - Dynamic Properties
+  - Upload and Download
 - `Widgets`
   - Accordian
   - Auto Complete

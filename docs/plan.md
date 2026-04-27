@@ -27,6 +27,8 @@
 - `Alerts, Frame & Windows`
   - Alerts
   - Browser Windows
+  - Frames
+  - Nested Frames
   - Modal Dialogs
 - `Elements`
   - Text Box
@@ -90,7 +92,7 @@
 
 ## Coverage gaps
 
-- broader DemoQA areas such as `Frames`, `Nested Frames`, `Broken Links - Images`, and `Upload and Download` are not covered yet
+- broader DemoQA areas such as `Broken Links - Images` and `Upload and Download` are not covered yet
 - `Widgets`
   - all currently implemented widget areas are covered in smoke and regression, but additional widget pages are still outside the suite
 

@@ -17,14 +17,15 @@ export class BrowserWindowsPage {
   }
 
   async openNewTab(): Promise<Page> {
-    const [popup] = await Promise.all([
-      this.page.waitForEvent('popup'),
-      this.page.locator('#tabButton').click(),
-    ]);
+    return this.openPopupFromButton('#tabButton');
+  }
 
-    await popup.waitForLoadState('domcontentloaded');
+  async openNewWindow(): Promise<Page> {
+    return this.openPopupFromButton('#windowButton');
+  }
 
-    return popup;
+  async openNewWindowMessage(): Promise<Page> {
+    return this.openPopupFromButton('#messageWindowButton');
   }
 
   async expectSamplePageOpened(popup: Page): Promise<void> {
@@ -32,5 +33,22 @@ export class BrowserWindowsPage {
     await expect(
       popup.getByRole('heading', { name: 'This is a sample page' }),
     ).toBeVisible();
+  }
+
+  async expectMessageWindowOpened(popup: Page): Promise<void> {
+    await expect(popup.locator('body')).toContainText(
+      'Knowledge increases by sharing',
+    );
+  }
+
+  private async openPopupFromButton(buttonSelector: string): Promise<Page> {
+    const [popup] = await Promise.all([
+      this.page.waitForEvent('popup'),
+      this.page.locator(buttonSelector).click(),
+    ]);
+
+    await popup.waitForLoadState('domcontentloaded');
+
+    return popup;
   }
 }

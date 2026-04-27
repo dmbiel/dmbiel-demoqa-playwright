@@ -92,7 +92,10 @@
 
 ## Coverage gaps
 
-- broader DemoQA areas such as `Broken Links - Images` and `Upload and Download` are not covered yet
+- `Alerts, Frame & Windows`
+  - `Browser Windows` is covered in smoke, but not represented in regression
+  - `Modal Dialogs` is covered in smoke, but not represented in regression
+- broader DemoQA areas such as `Frames` and `Nested Frames` are not covered yet
 - `Widgets`
   - all currently implemented widget areas are covered in smoke and regression, but additional widget pages are still outside the suite
 
@@ -111,7 +114,9 @@
 
 ## Near-term priorities
 
-- decide which uncovered DemoQA pages are worth adding next based on regression value and maintenance cost
+- add regression coverage for `Browser Windows` to align the `Alerts, Frame & Windows` package across layers
+- add regression coverage for `Modal Dialogs` to align the `Alerts, Frame & Windows` package across layers
+- decide whether `Frames` or `Nested Frames` is the next highest-value uncovered DemoQA target
 - keep `README.md`, `docs/ci-pipelines.md`, and this document synchronized when CI image rollout changes
 
 ## CI and container direction

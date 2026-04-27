@@ -17,9 +17,9 @@ export class NestedFramesPage {
   }
 
   async expectParentFrameText(): Promise<void> {
-    await expect(this.page.frameLocator('#frame1').locator('body')).toContainText(
-      'Parent frame',
-    );
+    await expect(
+      this.page.frameLocator('#frame1').locator('body'),
+    ).toContainText('Parent frame');
   }
 
   async expectChildFrameText(): Promise<void> {

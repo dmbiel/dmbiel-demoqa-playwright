@@ -27,6 +27,8 @@
 - `Alerts, Frame & Windows`
   - Alerts
   - Browser Windows
+  - Frames
+  - Nested Frames
   - Modal Dialogs
 - `Elements`
   - Text Box

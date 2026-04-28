@@ -64,6 +64,7 @@
 - `Alerts, Frame & Windows`
   - Alerts
   - Browser Windows
+  - Modal Dialogs
 - `Elements`
   - Text Box
   - Check Box
@@ -93,8 +94,6 @@
 
 ## Coverage gaps
 
-- `Alerts, Frame & Windows`
-  - `Modal Dialogs` is covered in smoke, but not represented in regression
 - broader DemoQA areas such as `Frames` and `Nested Frames` are not covered yet
 - `Widgets`
   - all currently implemented widget areas are covered in smoke and regression, but additional widget pages are still outside the suite
@@ -114,7 +113,6 @@
 
 ## Near-term priorities
 
-- add regression coverage for `Modal Dialogs` to align the `Alerts, Frame & Windows` package across layers
 - decide whether `Frames` or `Nested Frames` is the next highest-value uncovered DemoQA target
 - keep `README.md`, `docs/ci-pipelines.md`, and this document synchronized when CI image rollout changes
 

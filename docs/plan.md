@@ -94,9 +94,14 @@
 
 ## Coverage gaps
 
-- broader DemoQA areas such as `Frames` and `Nested Frames` are not covered yet
+- `Alerts, Frame & Windows`
+  - `Frames` and `Nested Frames` are covered in smoke, but not represented in regression on this branch
+
+## Watch items
+
 - `Widgets`
-  - all currently implemented widget areas are covered in smoke and regression, but additional widget pages are still outside the suite
+  - all currently identified DemoQA widget pages are covered in smoke and regression
+  - re-check the DemoQA `Widgets` menu periodically and add coverage if new widget pages appear
 
 ## Execution layers
 
@@ -113,7 +118,7 @@
 
 ## Near-term priorities
 
-- decide whether `Frames` or `Nested Frames` is the next highest-value uncovered DemoQA target
+- add regression coverage for `Frames` and `Nested Frames` to align the `Alerts, Frame & Windows` package across layers
 - keep `README.md`, `docs/ci-pipelines.md`, and this document synchronized when CI image rollout changes
 
 ## CI and container direction

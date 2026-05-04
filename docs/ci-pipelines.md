@@ -18,7 +18,7 @@ Because GitHub only exposes newly added workflows from the default branch, the r
 
 ## Main validation workflow
 
-File: [playwright.yml](/C:/Users/dimon/source/dmbiel-demoqa-playwright/.github/workflows/playwright.yml)
+File: [.github/workflows/playwright.yml](../.github/workflows/playwright.yml)
 
 ### `checks` job
 
@@ -59,7 +59,7 @@ Why this exists:
 
 ## Publish CI Images workflow
 
-File: [publish-ci-images.yml](/C:/Users/dimon/source/dmbiel-demoqa-playwright/.github/workflows/publish-ci-images.yml)
+File: [.github/workflows/publish-ci-images.yml](../.github/workflows/publish-ci-images.yml)
 
 This workflow publishes two images to GitHub Container Registry:
 
@@ -95,7 +95,7 @@ Why this matters:
 
 ### Checks image
 
-File: [checks.Dockerfile](/C:/Users/dimon/source/dmbiel-demoqa-playwright/docker/ci/checks.Dockerfile)
+File: [docker/ci/checks.Dockerfile](../docker/ci/checks.Dockerfile)
 
 Base image:
 
@@ -113,7 +113,7 @@ Notes:
 
 ### E2E image
 
-File: [e2e.Dockerfile](/C:/Users/dimon/source/dmbiel-demoqa-playwright/docker/ci/e2e.Dockerfile)
+File: [docker/ci/e2e.Dockerfile](../docker/ci/e2e.Dockerfile)
 
 Base image:
 
@@ -131,7 +131,7 @@ Important design choices:
 
 Helper script:
 
-- [build-e2e-runtime-package.mjs](/C:/Users/dimon/source/dmbiel-demoqa-playwright/docker/ci/scripts/build-e2e-runtime-package.mjs)
+- [docker/ci/scripts/build-e2e-runtime-package.mjs](../docker/ci/scripts/build-e2e-runtime-package.mjs)
 
 Responsibilities:
 

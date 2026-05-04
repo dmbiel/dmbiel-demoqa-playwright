@@ -7,7 +7,7 @@ The repository is focused on practical browser automation scenarios around:
 - healthcheck and navigation
 - elements
 - forms
-- alerts
+- alerts, frames, and windows
 - widgets
 - interactions
 
@@ -48,15 +48,17 @@ npm test -- --project regression
 
 Run only the smoke project:
 
-````bash
+```bash
 npm test -- --project smoke
+```
+
 Run quality checks locally:
 
 ```bash
 npm run format:check
 npm run lint
 npm run typecheck
-````
+```
 
 ## Available scripts
 
@@ -85,48 +87,65 @@ Current automated scenarios:
   - `Text Box`
     - successful submit
     - invalid email negative path
-  - `Buttons`
-    - dedicated coverage for double click, right click, and dynamic click
   - `Check Box`
     - full `Home` selection summary
     - `Downloads` branch selection outcome
   - `Radio Button`
     - switching between `Yes` and `Impressive`
     - disabled `No` option validation
+  - `Web Tables`
+    - create a new record
+    - search for a created record
+    - edit an existing record
+    - delete a record and verify the empty filtered state
+    - validate required fields in the registration modal
+  - `Buttons`
+    - dedicated coverage for double click, right click, and dynamic click
   - `Links`
     - both `Home` links in new tabs
     - API-style response links
+  - `Broken Links - Images`
+    - valid and broken image/link checks
+  - `Dynamic Properties`
+    - delayed enablement, color change, and visibility checks
+  - `Upload and Download`
+    - file download and upload validation
 - `Practice Form`
   - fill and submit the student registration form
   - validate submitted values in the result modal
   - required-field negative path
   - invalid mobile negative path
-- `Web Tables`
-  - create a new record
-  - search for a created record
-  - edit an existing record
-  - delete a record and verify the empty filtered state
-  - validate required fields in the registration modal
-- `Alerts`
-  - standard alert
-  - delayed alert
-  - confirm dialog
-  - prompt dialog
+- `Alerts, Frame & Windows`
+  - `Alerts`
+    - standard alert
+    - delayed alert
+    - confirm dialog
+    - prompt dialog
+  - `Browser Windows`
+    - new tab, new window, and message-only window checks
+  - `Frames`
+    - sample content inside the main frame
+  - `Nested Frames`
+    - parent and child frame content
+  - `Modal Dialogs`
+    - small modal in smoke
+    - small and large modals in regression
 - `Widgets`
-  - `Tabs`
-  - `Select Menu`
-  - `Tool Tips`
-  - `Progress Bar`
   - `Accordian`
-  - `Date Picker`
   - `Auto Complete`
-  - `Slider`
+  - `Date Picker`
   - `Menu`
+  - `Progress Bar`
+  - `Select Menu`
+  - `Slider`
+  - `Tabs`
+  - `Tool Tips`
 - `Interactions`
-  - `Droppable`
   - `Dragabble`
+  - `Droppable`
   - `Resizable`
   - `Selectable`
+  - `Sortable`
 
 ## Project structure
 
@@ -195,11 +214,11 @@ Those images are intended to support a more containerized CI path for:
 - Playwright runtime reuse in `e2e`
 - faster and more predictable setup once the image rollout is complete
 
-See [docs/ci-pipelines.md](/C:/Users/dimon/source/dmbiel-demoqa-playwright/docs/ci-pipelines.md) for the full pipeline notes, rollout strategy, and image-publishing details.
+See [docs/ci-pipelines.md](docs/ci-pipelines.md) for the full pipeline notes, rollout strategy, and image-publishing details.
 
 ## Next possible extensions
 
-- add coverage for buttons and double-click / right-click interactions
-- add coverage for dynamic properties and tables pagination
+- add regression coverage for `Frames` and `Nested Frames`
+- periodically re-check the DemoQA `Widgets` menu and add coverage if new widget pages appear
 - refine project tagging and selective CI execution for smoke vs regression paths
 - add Allure or richer reporting if needed

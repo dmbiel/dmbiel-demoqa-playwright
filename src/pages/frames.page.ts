@@ -23,4 +23,12 @@ export class FramesPage {
         .getByRole('heading', { name: 'This is a sample page' }),
     ).toBeVisible();
   }
+
+  async expectSecondFrameSampleHeading(): Promise<void> {
+    await expect(
+      this.page
+        .frameLocator('#frame2')
+        .getByRole('heading', { name: 'This is a sample page' }),
+    ).toBeVisible();
+  }
 }
